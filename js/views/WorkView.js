@@ -208,7 +208,7 @@
         createUser : {
             value: function(user)
             {
-				var userKey = user.key.replace(/./g, "_");
+				var userKey = user.key.replace(/\./g,'_');
 				
                 var element = $("#" + userKey + "_user");
 
