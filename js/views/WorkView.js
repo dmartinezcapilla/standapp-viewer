@@ -213,9 +213,7 @@
                 var element = $("#" + userKey + "_user");
 
                 if(element.length == 0)
-                {
-					alert(user.name + " " + userKey)
-					
+                {					
                     element = $("<li/>", {id: userKey + "_user", "data-name" : user.displayName, "data-user": user.key});
 					
                     var worklog = $("<div/>", {class: "worklog"}).appendTo(element);
