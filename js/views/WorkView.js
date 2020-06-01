@@ -208,11 +208,15 @@
         createUser : {
             value: function(user)
             {
-                var element = $("#" + user.key + "_user");
+				var userKey = user.key.replace(/./g, "_");
+				
+                var element = $("#" + userKey + "_user");
 
                 if(element.length == 0)
                 {
-                    element = $("<li/>", {id: user.key + "_user", "data-name" : user.displayName, "data-user": user.key});
+					alert(user.name + " " + userKey)
+					
+                    element = $("<li/>", {id: userKey + "_user", "data-name" : user.displayName, "data-user": user.key});
 					
                     var worklog = $("<div/>", {class: "worklog"}).appendTo(element);
 
