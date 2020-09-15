@@ -1,3 +1,37 @@
+$.xhrPool = [];
+$.xhrPool.abortAll = function() {
+    $(this).each(function(idx, jqXHR) {
+        jqXHR.abort();
+    });
+};
+
+$.ajaxSetup({
+    complete: function(jqXHR) {
+        var index = $.xhrPool.indexOf(jqXHR);
+        if (index > -1) {
+            $.xhrPool.splice(index, 1);
+        }
+    }
+});
+
+$(document).ready(function ()
+{             
+    $("#toolbar-window .close").click(function()
+    {
+       window.close();   
+    });
+    
+    $("#toolbar-window .minimize").click(function()
+    {
+       window.minimize();   
+    });
+    
+    $("#toolbar-window .maximize").click(function()
+    {
+       window.maximize();   
+    });
+});
+
 function round(value, numDec)
 {
     var dec = Math.pow(10, numDec);

@@ -127,19 +127,41 @@
             </div>
         </div>
         <div id="localVideo"></div>
+		<div id="context-menu"></div>
+        <div id="upgrade"><i class="fas fa-flag"></i>Viewer <span></span> has been installed, click <a href="#">Reload</a>. You can <a href="https://github.com/lurume84/standapp-viewer/releases" target="_blank">read more</a> about changes in this release.</div>
+        <div id="draggable-window"></div>
+        <div id="toolbar-window">
+			<div class="advanced">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="minimize">
+                <i class="fas fa-minus"></i>
+            </div>
+            <div class="maximize">
+                <i class="fas fa-window-maximize"></i>
+            </div>
+            <div class="close">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div id="toast" class="mdl-js-snackbar mdl-snackbar">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div class="mdl-snackbar__text"></div>
+            <button class="mdl-snackbar__action" type="button"></button>
+        </div>
+		<div id="scrum-helper">
+			SCRUM Helper tab
+        </div>
     </body>
     <script>
-        var g_jira_domain = "";
-        var g_jira_credentials = "user:pass";
-    
-        var credentials = {domain: "", token: ""};
+		var credentials = {server: "", user: "", password: ""};
     
 		var g_dev_users = [];
 		var g_qa_users = [];
-        var g_issuetype_map = {user_story: {"9": "us", "10302" : "offsprint_us"}, task: {"12": "qa", "5": "dev", "10303": "offsprint_task"}};
-        var g_status_map = {"10027": "todo", "10008": "progress", "10028": "test", "6": "done", "10035" : "rejected"};
+        var g_issuetype_map = {user_story: {"1": "Bug", "10200" : "Spike", "3" : "Task", "10001" : "Story", "10403" : "Integration", "10601" : "Systems Doc", "10600" : "Systems Test", "10401" : "Doc", "10100" : "Hardware Failure" }, task: {"5": "Sub-task" , "10800" : "Review", "10500" : "Finding"}};
+        var g_status_map = {"1": "todo", "3": "progress", "10001": "done", "10704" : "done", "10600" : "progress", "10601" : "progress", "10602" : "progress", "10401" : "progress", "10000" : "todo", "10500" : "test", "10300" : "progress", "10400" : "progress", "10603" : "progress"};
         var g_estimate_field = "customfield_10003";
-        
+		        
 		var g_seconds_per_user = 60;
 		
 		var g_master = {"key": "username_master",
@@ -157,7 +179,7 @@
 
         (function()
         {
-           new standapp.helpers.Initializer();
+           new viewer.helpers.Initializer();
         })();
     </script>
 </html>
