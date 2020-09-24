@@ -62,6 +62,13 @@ viewer.listeners = viewer.listeners || {};
             },
             enumerable: false
         },
+        getMetricsView : {
+            value: function(presenter)
+            {
+                return new viewer.views.MetricsView(presenter);
+            },
+            enumerable: false
+        },
         getWorkView : {
             value: function(presenter)
             {

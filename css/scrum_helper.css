@@ -1,0 +1,30 @@
+#scrum-helper
+{
+  transition: background-color .25s ease-in-out;
+  -moz-transition: background-color .25s ease-in-out;
+  -webkit-transition: background-color .25s ease-in-out;
+  background-color:rgba(0, 0, 0, 0);
+}
+
+#scrum-helper.running
+{
+  position:absolute;
+  width:100vw;
+  height:100vh;
+  top:0;
+  left:0;
+  background-color:rgba(0, 0, 0, 0.7);
+  z-index:999;
+}
+
+#close-scrum-helper-button
+{
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  height: 45px;
+  width: 45px;
+  margin: auto;
+  z-index: 999;
+  display:none;
+}

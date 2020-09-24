@@ -6,6 +6,7 @@
        
         this.userStoryView = Context.getUserStoryView(this);
         this.taskView = Context.getTaskView(this);
+        this.metricsView = Context.getMetricsView(this);
         this.workView = Context.getWorkView(this);
 		this.masterView = Context.getMasterView(this);
     }
@@ -22,6 +23,7 @@
                     {
                         self.userStoryView.load(data);
                         self.taskView.load(data);
+                        self.metricsView.load(data);
                         self.workView.load(boardId, data);
                         self.masterView.load(boardId);
                     },

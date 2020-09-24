@@ -5,6 +5,7 @@
         <link rel="stylesheet" href="lib/fontawesome/css/all.min.css">
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="css/user_story.css">
+        <link rel="stylesheet" href="css/scrum_helper.css">
         <link rel="stylesheet" href="css/task.css">
         <link rel="stylesheet" href="css/countdown.css">
         <link rel="stylesheet" href="css/controls.css">
@@ -26,6 +27,7 @@
         <script src="js/views/SprintView.js"></script>
         <script src="js/views/UserStoryView.js"></script>
         <script src="js/views/TaskView.js"></script>
+        <script src="js/views/MetricsView.js"></script>
         <script src="js/views/WorkView.js"></script>
         <script src="js/views/MasterView.js"></script>
         <script src="js/WorkPieChart.js"></script>
@@ -150,7 +152,12 @@
             <button class="mdl-snackbar__action" type="button"></button>
         </div>
 		<div id="scrum-helper">
-			SCRUM Helper tab
+            <div>
+                <button id="close-scrum-helper-button" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+                    <i class="material-icons">clear</i>
+                </button>
+            </div>
+            <div id="scrum-metrics-start"></div>
         </div>
     </body>
     <script>

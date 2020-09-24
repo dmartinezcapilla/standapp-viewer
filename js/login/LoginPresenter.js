@@ -12,6 +12,7 @@
         
         this.userStoryView = Context.getIssuePresenter().userStoryView;
         this.taskView = Context.getIssuePresenter().taskView;
+        this.metricsView = Context.getIssuePresenter().metricsView;
         this.workView = Context.getIssuePresenter().workView;
 		this.masterView = Context.getIssuePresenter().masterView;
     }
@@ -55,6 +56,7 @@
 													self.workView.init();
 													self.userStoryView.init();
 													self.taskView.init();
+													self.metricsView.init();
 												});
                     },
                     function(data)

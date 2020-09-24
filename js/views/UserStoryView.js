@@ -31,6 +31,8 @@
         load : {
             value: function(data)
             {
+                var self = this;
+
                 var completed_user_stories = [];
 
                 $.each( data.issues, function( key, issue )
@@ -87,7 +89,9 @@
                 {
 					item.appendTo($("#content"));
 				});
-				
+
+
+
 				componentHandler.upgradeAllRegistered();
             },
             enumerable: false
