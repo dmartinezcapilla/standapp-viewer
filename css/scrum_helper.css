@@ -4,6 +4,7 @@
   -moz-transition: background-color .25s ease-in-out;
   -webkit-transition: background-color .25s ease-in-out;
   background-color:rgba(0, 0, 0, 0);
+  display:none;
 }
 
 #scrum-helper.running
@@ -17,6 +18,13 @@
   z-index:999;
 }
 
+#scrum-helper-content
+{
+  padding: 50px;
+  overflow-y: auto;
+  max-height: 100%;
+}
+
 #close-scrum-helper-button
 {
   position: fixed;
@@ -28,3 +36,4 @@
   z-index: 999;
   display:none;
 }
+

@@ -271,3 +271,9 @@ html
     color: #fff;
     font-weight: 600;
 }
+
+tfoot
+{
+    font-weight: bold;
+    font-size: 14px;
+}

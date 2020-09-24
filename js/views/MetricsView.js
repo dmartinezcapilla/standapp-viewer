@@ -2,6 +2,22 @@
 {
     var self;
 
+    const US_DESCRIPTION = 0;
+    const US_TYPE = 1;
+    const US_TYPE_ICON = 2;
+    const US_STATUS = 3;
+    const US_STATUS_ICON = 4;
+    const DEV_TIME_ESTIMATED = 5;
+    const DEV_TIME_LOGGED = 6;
+    const DEV_TIME_REMAINING = 7;
+    const AT_TIME_ESTIMATED = 8;
+    const AT_TIME_LOGGED = 9;
+    const AT_TIME_REMAINING = 10;
+    const TEST_TIME_ESTIMATED = 11;
+    const TEST_TIME_LOGGED = 12;
+    const TEST_TIME_REMAINING = 13;
+
+
     function MetricsView(presenter)
     {
         this.presenter = presenter;
@@ -14,12 +30,14 @@
             {
                 $("#toolbar-window .advanced").off("click").on("click", function()
                 {
+                    $("#scrum-helper").show();
                     $("#scrum-helper").addClass("running");
                     $("#close-scrum-helper-button").show();
                 });
 
                 $("#close-scrum-helper-button").click(function()
                 {
+                    $("#scrum-helper").hide();
                     $("#scrum-helper").removeClass("running");
                     $("#close-scrum-helper-button").hide();
                 });
@@ -31,8 +49,24 @@
             value: function(data)
             {
                 var self = this;
-
                 var storyMetricsMap = new Map();
+
+                var initialRowValues = [];
+                initialRowValues[US_DESCRIPTION] = "TOTALS";
+                initialRowValues[US_TYPE] ="";
+                initialRowValues[US_TYPE_ICON] = "";
+                initialRowValues[US_STATUS] = "";
+                initialRowValues[US_STATUS_ICON] = "";
+                initialRowValues[DEV_TIME_ESTIMATED] = 0;
+                initialRowValues[DEV_TIME_LOGGED] = 0;
+                initialRowValues[DEV_TIME_REMAINING] = 0;
+                initialRowValues[AT_TIME_ESTIMATED] = 0;
+                initialRowValues[AT_TIME_LOGGED] = 0;
+                initialRowValues[AT_TIME_REMAINING] = 0;
+                initialRowValues[TEST_TIME_ESTIMATED] = 0;
+                initialRowValues[TEST_TIME_LOGGED] = 0;
+                initialRowValues[TEST_TIME_REMAINING] = 0;
+                storyMetricsMap.set("Summary", initialRowValues);
 
 
                 $.each( data.issues, function( key, issue )
@@ -41,97 +75,60 @@
 
                     if(issueTypeUserStory != undefined)
                     {
-                        // console.log("Story: ", issue.fields.summary);
-                        //self.storyMetricsDev[issue.key] = 0;//{"metrics": {"dev": 0, "at": 0, "test": 0}};
-                        //console.log("DataForMetrics", issue.key, issue.fields.subtasks);
+                        var storyInitialRowValues = [];
+                        storyInitialRowValues[US_DESCRIPTION] =issue.fields.summary;
+                        storyInitialRowValues[US_TYPE] =issueTypeUserStory;
+                        storyInitialRowValues[US_TYPE_ICON] = "<img class=\"issuetype\" src=\"" + issue.fields.issuetype.iconUrl + "\"/>";
+                        storyInitialRowValues[US_STATUS] = "";
+                        storyInitialRowValues[US_STATUS_ICON] = "<img class=\"statusicon\" src=\"" + issue.fields.status.iconUrl + "\"/>";
+                        storyInitialRowValues[US_STATUS] = issue.fields.status;
+                        storyInitialRowValues[DEV_TIME_ESTIMATED] = 0;
+                        storyInitialRowValues[DEV_TIME_LOGGED] = 0;
+                        storyInitialRowValues[DEV_TIME_REMAINING] = 0;
+                        storyInitialRowValues[AT_TIME_ESTIMATED] = 0;
+                        storyInitialRowValues[AT_TIME_LOGGED] = 0;
+                        storyInitialRowValues[AT_TIME_REMAINING] = 0;
+                        storyInitialRowValues[TEST_TIME_ESTIMATED] = 0;
+                        storyInitialRowValues[TEST_TIME_LOGGED] = 0;
+                        storyInitialRowValues[TEST_TIME_REMAINING] = 0;
 
-                        storyMetricsMap.set(issue.key, [0,0,0,0,0,0]);
+                        storyMetricsMap.set(issue.key, storyInitialRowValues);
+
+                        // console.log("issue:", issue);
                     }
                     else {
                         var subtask = issue;
                         var parentKey = subtask.fields.parent.key;
-                        // console.log("Subtask:", issue, parentKey, storyMetricsMap, storyMetricsMap.get(parentKey));
 
                         // console.log("issue:", issue);
 
-                        var timeRemaining = issue.fields.timetracking.remainingEstimateSeconds / 3600;
+                        var timeRemaining = 0;
+                        if (issue.fields.timetracking.remainingEstimateSeconds) {
+                            timeRemaining+= issue.fields.timetracking.remainingEstimateSeconds/3600;
+                        }
 
+                        var remTimeColIndex = -1;
                         if (self.getSubtaskType(subtask) == "dev")
                         {
-                            storyMetricsMap.get(parentKey)[0]+= timeRemaining;
-                            //self.storyMetricsDev[subtask.fields.parent.key]++;
+                            remTimeColIndex = DEV_TIME_REMAINING;
                         }
                         else if (self.getSubtaskType(subtask) == "at")
                         {
-                            storyMetricsMap.get(parentKey)[2]+= timeRemaining;
-                            //self.storyMetrics[subtask.fields.parent.key].metrics.at++;
+                            remTimeColIndex = AT_TIME_REMAINING;
                         }
                         else if (self.getSubtaskType(subtask) == "test") {
-                            storyMetricsMap.get(parentKey)[4]+= timeRemaining;
-                            //self.storyMetrics[subtask.fields.parent.key].metrics.test++;
+                            remTimeColIndex = TEST_TIME_REMAINING;
                         }
+                        storyMetricsMap.get(parentKey)[remTimeColIndex]+= timeRemaining;
+                        storyMetricsMap.get("Summary")[remTimeColIndex]+= timeRemaining;
                     }
-
-
-                        /*
-                       var parent = $("#" + issue.fields.parent.key);
-
-                       if(parent.length)
-                       {
-                           var assignee = "";
-						   
-							if(issue.fields.assignee != undefined)
-							{
-								assignee =  "<div class='assignee'>" +
-											"   <img id=\"" + issue.key + "_avatar\" src='" + issue.fields.assignee.avatarUrls["32x32"] + "'>" +
-											"   <div class=\"mdl-tooltip\" data-mdl-for=\"" + issue.key + "_avatar\">" + issue.fields.assignee.name + "</div>" +
-											"</div>";
-							}
-
-                            var task = $("<li/>",
-                            {
-                                id: issue.key, 
-                                class: "task " + issueType,
-                                html:   assignee +
-                                        "<a class='number'>" + issue.key + "</a>" +
-                                        "<div class=\"mdl-tooltip\" data-mdl-for=\"" + issue.key + "_link\">" + issue.fields.summary + "</div>" +
-                                        "<div id=\"" + issue.key + "_link\" class=\"title\">" + issue.fields.summary + "</div>"
-                            });
-
-                            $("<div/>", {class: "progress mdl-progress mdl-js-progress"}).on('mdl-componentupgraded', function() {
-                                this.MaterialProgress.setProgress(issue.fields.progress.percent);
-                            }).appendTo(task);
-
-                            var status = g_status_map[issue.fields.status.id];
-
-                            if((status == "test" && issueType == "dev") || status == "rejected")
-                            {
-                                parent.children(".done").append(task);
-                            }
-                            else
-                            {
-                                var target = parent.children("." + status);
-								
-								target.append(task);
-								
-								if(target.children("li").length > 4 && !target.hasClass("kinetic-active"))
-								{
-									target.kinetic({cursor: "auto"});
-								}
-                            }
-                       }
-                   }*/
                 });
 
-                // storyMetricsMap.toString().appendTo("#scrum-helper .content");
+                $("#sos-story-table-body").html("");
+                $("#sos-story-table-foot").html("");
+                storyMetricsMap.forEach(self.paintSOSStoryTableRow);
+                self.paintSOSStorySummaryRow(storyMetricsMap);
 
-                var map = $("<div/>", {class: "summary"}).append(storyMetricsMap.toString());
-                map.appendTo($("#scrum-metrics-start"));
-                console.log("User Stories: ",storyMetricsMap );
-
-				// $("#loading").hide();
-				// $("#start_standup").show();
-				
                 componentHandler.upgradeAllRegistered();
             },
             enumerable: false
@@ -160,22 +157,49 @@
             },
             enumerable: false
         },
-
-        showError : {
-            value: function(data)
+        paintSOSStoryTableRow : {
+            value: function(value, key, map)
             {
-                console.log(data);
+                var rowData;
+                if (key != "Summary") {
+                    rowData = $("<tr/>",
+                    {
+                        id: key,
+                        class: "story",
+                        html:    "<td class='mdl-data-table__cell--non-numeric '> " + value[US_TYPE_ICON] +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric'> " + key +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric'> " + value[US_DESCRIPTION] +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric'> " + value[DEV_TIME_REMAINING] +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric'> " + value[AT_TIME_REMAINING] +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric'> " + value[TEST_TIME_REMAINING] +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric'> " + value[US_STATUS_ICON] + "</td>"
+                    });
+                    rowData.appendTo($("#sos-story-table-body"));
+                }
             },
             enumerable: false
         },
-
-        showError : {
-            value: function(data)
+        paintSOSStorySummaryRow : {
+            value: function(map)
             {
-                console.log(data);
+                var self = this;
+                var value = map.get("Summary");
+                var rowData = $("<tr/>",
+                    {
+                        id: "sprint-sos-summary",
+                        class: "summary-row",
+                        html:    "<td class='mdl-data-table__cell--non-numeric '> TOTALS: </td>" +
+                            "<td class='mdl-data-table__cell--non-numeric'> </td>" +
+                            "<td class='mdl-data-table__cell--non-numeric'> </td>" +
+                            "<td class='mdl-data-table__cell--non-numeric'> " + value[DEV_TIME_REMAINING] +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric'> " + value[AT_TIME_REMAINING] +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric'> " + value[TEST_TIME_REMAINING] +"</td>" +
+                            "<td class='hiddenField'><span class='mdl-chip__contact "+"green"+" mdl-color-text--white'></span></td>"
+                    });
+                rowData.appendTo($("#sos-story-table-foot"));
             },
             enumerable: false
-        }
+        },
     });
 
     views.MetricsView = MetricsView;
