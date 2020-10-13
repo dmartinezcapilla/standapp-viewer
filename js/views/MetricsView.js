@@ -3,19 +3,24 @@
     var self;
 
     const US_DESCRIPTION = 0;
-    const US_TYPE = 1;
-    const US_TYPE_ICON = 2;
-    const US_STATUS = 3;
-    const US_STATUS_ICON = 4;
-    const DEV_TIME_ESTIMATED = 5;
-    const DEV_TIME_LOGGED = 6;
-    const DEV_TIME_REMAINING = 7;
-    const AT_TIME_ESTIMATED = 8;
-    const AT_TIME_LOGGED = 9;
-    const AT_TIME_REMAINING = 10;
-    const TEST_TIME_ESTIMATED = 11;
-    const TEST_TIME_LOGGED = 12;
-    const TEST_TIME_REMAINING = 13;
+    const US_USP = 1;
+    const US_TYPE = 2;
+    const US_TYPE_ICON = 3;
+    const US_STATUS = 4;
+    const US_STATUS_ICON = 5;
+    const DEV_TIME_ESTIMATED = 6;
+    const DEV_TIME_LOGGED = 7;
+    const DEV_TIME_REMAINING = 8;
+    const DEV_DEVIATION = 9;
+    const AT_TIME_ESTIMATED = 10;
+    const AT_TIME_LOGGED = 11;
+    const AT_TIME_REMAINING = 12;
+    const AT_DEVIATION = 13;
+    const TEST_TIME_ESTIMATED = 14;
+    const TEST_TIME_LOGGED = 15;
+    const TEST_TIME_REMAINING = 16;
+    const TEST_DEVIATION = 17;
+    const STORY_DEVIATION = 18;
 
 
     function MetricsView(presenter)
@@ -41,6 +46,30 @@
                     $("#scrum-helper").removeClass("running");
                     $("#close-scrum-helper-button").hide();
                 });
+
+                $("#switch-sos").click(function() {
+
+                    if($('#switch-sos-label').is('.is-checked')) {
+                        $('.eos-field').show();
+                        $('.sos-field').hide();
+                    }
+                    else {
+                        $('.eos-field').hide();
+                        $('.sos-field').show();
+                    }
+                });
+
+                $("#switch-export").click(function() {
+
+                    if($('#switch-export-label').is('.is-checked')) {
+                        $('.non-export-field').hide();
+                    }
+                    else {
+                        $('.non-export-field').show();
+                    }
+                });
+
+
             },
             enumerable: false
         },
@@ -51,22 +80,26 @@
                 var self = this;
                 var storyMetricsMap = new Map();
 
-                var initialRowValues = [];
-                initialRowValues[US_DESCRIPTION] = "TOTALS";
-                initialRowValues[US_TYPE] ="";
-                initialRowValues[US_TYPE_ICON] = "";
-                initialRowValues[US_STATUS] = "";
-                initialRowValues[US_STATUS_ICON] = "";
-                initialRowValues[DEV_TIME_ESTIMATED] = 0;
-                initialRowValues[DEV_TIME_LOGGED] = 0;
-                initialRowValues[DEV_TIME_REMAINING] = 0;
-                initialRowValues[AT_TIME_ESTIMATED] = 0;
-                initialRowValues[AT_TIME_LOGGED] = 0;
-                initialRowValues[AT_TIME_REMAINING] = 0;
-                initialRowValues[TEST_TIME_ESTIMATED] = 0;
-                initialRowValues[TEST_TIME_LOGGED] = 0;
-                initialRowValues[TEST_TIME_REMAINING] = 0;
-                storyMetricsMap.set("Summary", initialRowValues);
+                var summaryRowValues = [];
+                summaryRowValues[US_DESCRIPTION] = "TOTALS";
+                summaryRowValues[US_TYPE] ="";
+                summaryRowValues[US_TYPE_ICON] = "";
+                summaryRowValues[US_STATUS] = "";
+                summaryRowValues[US_STATUS_ICON] = "";
+                summaryRowValues[DEV_TIME_ESTIMATED] = 0;
+                summaryRowValues[DEV_TIME_LOGGED] = 0;
+                summaryRowValues[DEV_TIME_REMAINING] = 0;
+                summaryRowValues[DEV_DEVIATION] = 0;
+                summaryRowValues[AT_TIME_ESTIMATED] = 0;
+                summaryRowValues[AT_TIME_LOGGED] = 0;
+                summaryRowValues[AT_TIME_REMAINING] = 0;
+                summaryRowValues[AT_DEVIATION] = 0;
+                summaryRowValues[TEST_TIME_ESTIMATED] = 0;
+                summaryRowValues[TEST_TIME_LOGGED] = 0;
+                summaryRowValues[TEST_TIME_REMAINING] = 0;
+                summaryRowValues[TEST_DEVIATION] = 0;
+                summaryRowValues[STORY_DEVIATION] = 0;
+                storyMetricsMap.set("Summary", summaryRowValues);
 
 
                 $.each( data.issues, function( key, issue )
@@ -77,6 +110,7 @@
                     {
                         var storyInitialRowValues = [];
                         storyInitialRowValues[US_DESCRIPTION] =issue.fields.summary;
+                        storyInitialRowValues[US_USP] = issue.fields.customfield_10005;
                         storyInitialRowValues[US_TYPE] =issueTypeUserStory;
                         storyInitialRowValues[US_TYPE_ICON] = "<img class=\"issuetype\" src=\"" + issue.fields.issuetype.iconUrl + "\"/>";
                         storyInitialRowValues[US_STATUS] = "";
@@ -85,12 +119,16 @@
                         storyInitialRowValues[DEV_TIME_ESTIMATED] = 0;
                         storyInitialRowValues[DEV_TIME_LOGGED] = 0;
                         storyInitialRowValues[DEV_TIME_REMAINING] = 0;
+                        storyInitialRowValues[DEV_DEVIATION] = 0;
                         storyInitialRowValues[AT_TIME_ESTIMATED] = 0;
                         storyInitialRowValues[AT_TIME_LOGGED] = 0;
                         storyInitialRowValues[AT_TIME_REMAINING] = 0;
+                        storyInitialRowValues[AT_DEVIATION] = 0;
                         storyInitialRowValues[TEST_TIME_ESTIMATED] = 0;
                         storyInitialRowValues[TEST_TIME_LOGGED] = 0;
                         storyInitialRowValues[TEST_TIME_REMAINING] = 0;
+                        storyInitialRowValues[TEST_DEVIATION] = 0;
+                        storyInitialRowValues[STORY_DEVIATION] = 0;
 
                         storyMetricsMap.set(issue.key, storyInitialRowValues);
 
@@ -102,34 +140,117 @@
 
                         // console.log("issue:", issue);
 
+                        var timeEstimate = 0;
+                        var timeLogged = 0;
                         var timeRemaining = 0;
+                        if (issue.fields.timetracking.originalEstimateSeconds) {
+                            timeEstimate+= issue.fields.timetracking.originalEstimateSeconds/3600;
+                        }
+                        if (issue.fields.timetracking.timeSpentSeconds) {
+                            timeLogged+= issue.fields.timetracking.timeSpentSeconds/3600;
+                        }
                         if (issue.fields.timetracking.remainingEstimateSeconds) {
                             timeRemaining+= issue.fields.timetracking.remainingEstimateSeconds/3600;
                         }
 
-                        var remTimeColIndex = -1;
-                        if (self.getSubtaskType(subtask) == "dev")
+                        if (self.getSubtaskType(subtask) != "finding")
                         {
-                            remTimeColIndex = DEV_TIME_REMAINING;
+                            var remTimeColIndex = -1;
+                            var estTimeColIndex = -1;
+                            var logTimeColIndex = -1;
+                            var deviationColIndex = -1;
+                            if (self.getSubtaskType(subtask) == "dev")
+                            {
+                                remTimeColIndex = DEV_TIME_REMAINING;
+                                estTimeColIndex = DEV_TIME_ESTIMATED;
+                                logTimeColIndex = DEV_TIME_LOGGED;
+                                deviationColIndex = DEV_DEVIATION;
+                            }
+                            else if (self.getSubtaskType(subtask) == "at")
+                            {
+                                remTimeColIndex = AT_TIME_REMAINING;
+                                estTimeColIndex = AT_TIME_ESTIMATED;
+                                logTimeColIndex = AT_TIME_LOGGED;
+                                deviationColIndex = AT_DEVIATION;
+                            }
+                            else if (self.getSubtaskType(subtask) == "test") {
+                                remTimeColIndex = TEST_TIME_REMAINING;
+                                estTimeColIndex = TEST_TIME_ESTIMATED;
+                                logTimeColIndex = TEST_TIME_LOGGED;
+                                deviationColIndex = TEST_DEVIATION;
+                            }
+
+                            storyMetricsMap.get(parentKey)[estTimeColIndex]+= timeEstimate;
+                            storyMetricsMap.get(parentKey)[logTimeColIndex]+= timeLogged;
+                            storyMetricsMap.get(parentKey)[remTimeColIndex]+= timeRemaining;
+                            storyMetricsMap.get(parentKey)[deviationColIndex] =
+                                (storyMetricsMap.get(parentKey)[logTimeColIndex]-
+                                storyMetricsMap.get(parentKey)[estTimeColIndex])
+                                /storyMetricsMap.get(parentKey)[estTimeColIndex];
+                            storyMetricsMap.get("Summary")[estTimeColIndex]+= timeEstimate;
+                            storyMetricsMap.get("Summary")[logTimeColIndex]+= timeLogged;
+                            storyMetricsMap.get("Summary")[remTimeColIndex]+= timeRemaining;
+                            storyMetricsMap.get("Summary")[deviationColIndex] =
+                                (storyMetricsMap.get("Summary")[logTimeColIndex]-
+                                    storyMetricsMap.get("Summary")[estTimeColIndex])
+                                /storyMetricsMap.get("Summary")[estTimeColIndex];
                         }
-                        else if (self.getSubtaskType(subtask) == "at")
+                        else // finding (half test, half dev)
                         {
-                            remTimeColIndex = AT_TIME_REMAINING;
+                            storyMetricsMap.get(parentKey)[DEV_TIME_ESTIMATED]+= (timeEstimate/2);
+                            storyMetricsMap.get(parentKey)[TEST_TIME_ESTIMATED]+= (timeEstimate/2);
+                            storyMetricsMap.get(parentKey)[DEV_TIME_LOGGED]+= (timeLogged/2);
+                            storyMetricsMap.get(parentKey)[TEST_TIME_LOGGED]+= (timeLogged/2);
+                            storyMetricsMap.get(parentKey)[DEV_TIME_REMAINING]+= (timeRemaining/2);
+                            storyMetricsMap.get(parentKey)[TEST_TIME_REMAINING]+= (timeRemaining/2);
+                            storyMetricsMap.get(parentKey)[DEV_DEVIATION] =
+                                (storyMetricsMap.get(parentKey)[DEV_TIME_LOGGED]-
+                                    storyMetricsMap.get(parentKey)[DEV_TIME_ESTIMATED])
+                                /storyMetricsMap.get(parentKey)[DEV_TIME_ESTIMATED];
+                            storyMetricsMap.get(parentKey)[TEST_DEVIATION] =
+                                (storyMetricsMap.get(parentKey)[TEST_TIME_LOGGED]-
+                                    storyMetricsMap.get(parentKey)[TEST_TIME_ESTIMATED])
+                                /storyMetricsMap.get(parentKey)[TEST_TIME_ESTIMATED];
+                            storyMetricsMap.get(parentKey)[AT_DEVIATION] =
+                                (storyMetricsMap.get(parentKey)[AT_TIME_LOGGED]-
+                                    storyMetricsMap.get(parentKey)[AT_TIME_ESTIMATED])
+                                /storyMetricsMap.get(parentKey)[AT_TIME_ESTIMATED];
+
+                            storyMetricsMap.get("Summary")[DEV_TIME_ESTIMATED]+= (timeEstimate/2);
+                            storyMetricsMap.get("Summary")[DEV_TIME_LOGGED]+= (timeLogged/2);
+                            storyMetricsMap.get("Summary")[DEV_TIME_REMAINING]+= (timeRemaining/2);
+                            storyMetricsMap.get("Summary")[TEST_TIME_ESTIMATED]+= (timeEstimate/2);
+                            storyMetricsMap.get("Summary")[TEST_TIME_LOGGED]+= (timeLogged/2);
+                            storyMetricsMap.get("Summary")[TEST_TIME_REMAINING]+= (timeRemaining/2);
+                            storyMetricsMap.get("Summary")[AT_TIME_ESTIMATED]+= (timeEstimate/2);
+                            storyMetricsMap.get("Summary")[AT_TIME_LOGGED]+= (timeLogged/2);
+                            storyMetricsMap.get("Summary")[AT_TIME_REMAINING]+= (timeRemaining/2);
+                            storyMetricsMap.get("Summary")[DEV_DEVIATION] =
+                                (storyMetricsMap.get("Summary")[DEV_TIME_LOGGED]-
+                                    storyMetricsMap.get("Summary")[DEV_TIME_ESTIMATED])
+                                /storyMetricsMap.get("Summary")[DEV_TIME_ESTIMATED];
+                            storyMetricsMap.get("Summary")[TEST_DEVIATION] =
+                                (storyMetricsMap.get("Summary")[TEST_TIME_LOGGED]-
+                                    storyMetricsMap.get("Summary")[TEST_TIME_ESTIMATED])
+                                /storyMetricsMap.get("Summary")[TEST_TIME_ESTIMATED];
+                            storyMetricsMap.get("Summary")[AT_DEVIATION] =
+                                (storyMetricsMap.get("Summary")[AT_TIME_LOGGED]-
+                                    storyMetricsMap.get("Summary")[AT_TIME_ESTIMATED])
+                                /storyMetricsMap.get("Summary")[AT_TIME_ESTIMATED];
                         }
-                        else if (self.getSubtaskType(subtask) == "test") {
-                            remTimeColIndex = TEST_TIME_REMAINING;
-                        }
-                        storyMetricsMap.get(parentKey)[remTimeColIndex]+= timeRemaining;
-                        storyMetricsMap.get("Summary")[remTimeColIndex]+= timeRemaining;
                     }
                 });
 
                 $("#sos-story-table-body").html("");
                 $("#sos-story-table-foot").html("");
-                storyMetricsMap.forEach(self.paintSOSStoryTableRow);
+                storyMetricsMap.forEach(self.paintSOSStoryTableRow, this);
                 self.paintSOSStorySummaryRow(storyMetricsMap);
 
                 componentHandler.upgradeAllRegistered();
+
+                $('.eos-field').hide();
+                $('.sos-field').show();
+                $('.non-export-field').show();
             },
             enumerable: false
         },
@@ -151,9 +272,30 @@
                     return "test";
                 } else if (subtaskSummary.startsWith("AT")){
                     return "at";
-                } else {
+                } else if (subtaskSummary.startsWith("Finding")) {
+                    return "finding";
+                } else
+                {
                     return "dev";
                 }
+            },
+            enumerable: false
+        },
+        formatToStringHours : {
+            value: function(value)
+            {
+                var valueRound = value.toFixed(2);
+                var valueRoundString = valueRound.toString(2);
+                return valueRoundString;
+            },
+            enumerable: false
+        },
+        formatToStringPercentage : {
+            value: function(value)
+            {
+                var valuePercentage = (value*100).toFixed(1);
+                var valuePercentageString = valuePercentage.toString() + "%";
+                return valuePercentageString;
             },
             enumerable: false
         },
@@ -161,18 +303,30 @@
             value: function(value, key, map)
             {
                 var rowData;
+                // console.log("DEBUG", key, map, this);
+
                 if (key != "Summary") {
                     rowData = $("<tr/>",
                     {
                         id: key,
                         class: "story",
-                        html:    "<td class='mdl-data-table__cell--non-numeric '> " + value[US_TYPE_ICON] +"</td>" +
+                        html:    "<td class='mdl-data-table__cell--non-numeric non-export-field'> " + value[US_TYPE_ICON] +"</td>" +
                             "<td class='mdl-data-table__cell--non-numeric'> " + key +"</td>" +
-                            "<td class='mdl-data-table__cell--non-numeric'> " + value[US_DESCRIPTION] +"</td>" +
-                            "<td class='mdl-data-table__cell--non-numeric'> " + value[DEV_TIME_REMAINING] +"</td>" +
-                            "<td class='mdl-data-table__cell--non-numeric'> " + value[AT_TIME_REMAINING] +"</td>" +
-                            "<td class='mdl-data-table__cell--non-numeric'> " + value[TEST_TIME_REMAINING] +"</td>" +
-                            "<td class='mdl-data-table__cell--non-numeric'> " + value[US_STATUS_ICON] + "</td>"
+                            "<td class='mdl-data-table__cell--non-numeric'> <span>" + value[US_DESCRIPTION] +"</span></td>" +
+                            "<td class='mdl-data-table__cell--non-numeric'> " + value[US_USP] +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringHours(value[DEV_TIME_LOGGED]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringHours(value[DEV_TIME_ESTIMATED]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric sos-field'> " + this.formatToStringHours(value[DEV_TIME_REMAINING]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringHours(value[AT_TIME_LOGGED]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringHours(value[AT_TIME_ESTIMATED]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric sos-field'> " + this.formatToStringHours(value[AT_TIME_REMAINING]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringHours(value[TEST_TIME_LOGGED]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringHours(value[AT_TIME_ESTIMATED]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric sos-field'> " + this.formatToStringHours(value[TEST_TIME_REMAINING]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringPercentage(value[DEV_DEVIATION]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringPercentage(value[AT_DEVIATION]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringPercentage(value[TEST_DEVIATION]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric non-export-field'> " + value[US_STATUS_ICON] + "</td>"
                     });
                     rowData.appendTo($("#sos-story-table-body"));
                 }
@@ -182,19 +336,28 @@
         paintSOSStorySummaryRow : {
             value: function(map)
             {
-                var self = this;
                 var value = map.get("Summary");
                 var rowData = $("<tr/>",
                     {
                         id: "sprint-sos-summary",
                         class: "summary-row",
                         html:    "<td class='mdl-data-table__cell--non-numeric '> TOTALS: </td>" +
+                            "<td class='mdl-data-table__cell--non-numeric non-export-field'> </td>" +
                             "<td class='mdl-data-table__cell--non-numeric'> </td>" +
                             "<td class='mdl-data-table__cell--non-numeric'> </td>" +
-                            "<td class='mdl-data-table__cell--non-numeric'> " + value[DEV_TIME_REMAINING] +"</td>" +
-                            "<td class='mdl-data-table__cell--non-numeric'> " + value[AT_TIME_REMAINING] +"</td>" +
-                            "<td class='mdl-data-table__cell--non-numeric'> " + value[TEST_TIME_REMAINING] +"</td>" +
-                            "<td class='hiddenField'><span class='mdl-chip__contact "+"green"+" mdl-color-text--white'></span></td>"
+                            "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringHours(value[DEV_TIME_LOGGEDSTIMATED]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringHours(value[DEV_TIME_ESTIMATEDOGGED]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric sos-field'> " + this.formatToStringHours(value[DEV_TIME_REMAINING]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringHours(value[AT_TIME_LOGGEDSTIMATED]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringHours(value[AT_TIME_ESTIMATEDOGGED]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric sos-field'> " + this.formatToStringHours(value[AT_TIME_REMAINING]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringHours(value[TEST_TIME_LOGGEDTIMATED]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringHours(value[TEST_TIME_ESTIMATEDOGGED]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric sos-field'> " + this.formatToStringHours(value[TEST_TIME_REMAINING]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringPercentage(value[DEV_DEVIATION]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringPercentage(value[AT_DEVIATION]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringPercentage(value[TEST_DEVIATION]) +"</td>" +
+                            "<td class='non-export-field'></td>"
                     });
                 rowData.appendTo($("#sos-story-table-foot"));
             },

@@ -25,6 +25,39 @@
   max-height: 100%;
 }
 
+#scrum-helper-content table
+{
+  table-layout: fixed;
+  max-width: 80%;
+}
+
+#scrum-helper-content th,
+#scrum-helper-content th span
+{
+  text-overflow:ellipsis;
+  overflow:hidden;
+  white-space: pre-wrap;
+  max-width: 90px;
+}
+
+#scrum-helper-content tr,
+#scrum-helper-content tr td,
+#scrum-helper-content tr span
+{
+  text-overflow:ellipsis;
+  overflow:hidden;
+  white-space: pre-wrap;
+  max-width: 250px;
+}
+
+
+
+#scrum-helper-content tr,
+#scrum-helper-content td
+{
+  height:30px;
+}
+
 #close-scrum-helper-button
 {
   position: fixed;
@@ -37,3 +70,19 @@
   display:none;
 }
 
+#switch-sos-label,
+#switch-export-label
+{
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  height: 45px;
+  width: 45px;
+  margin: auto;
+  z-index: 999;
+}
+
+#switch-export-label
+{
+  top: 120px;
+}

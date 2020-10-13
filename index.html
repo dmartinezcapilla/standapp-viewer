@@ -161,13 +161,23 @@
                 <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
                     <thead>
                     <tr>
-                        <th class="mdl-data-table__cell--non-numeric">Type</th>
+                        <th class="mdl-data-table__cell--non-numeric non-export-field">Type</th>
                         <th class="mdl-data-table__cell--non-numeric">ID</th>
                         <th class="mdl-data-table__cell--non-numeric">Description</th>
-                        <th class="mdl-data-table__cell--non-numeric">DEV Time Remain.</th>
-                        <th class="mdl-data-table__cell--non-numeric">AT Time Remain.</th>
-                        <th class="mdl-data-table__cell--non-numeric">TEST Time Remain.</th>
-                        <th class="hiddenField mdl-data-table__cell--non-numeric">Status</th>
+                        <th class="mdl-data-table__cell--non-numeric">USP</th>
+                        <th class="mdl-data-table__cell--non-numeric eos-field"><span>DEV Log.</span></th>
+                        <th class="mdl-data-table__cell--non-numeric eos-field"><span>DEV Est.</span></th>
+                        <th class="mdl-data-table__cell--non-numeric sos-field"><span>DEV Remain.</span></th>
+                        <th class="mdl-data-table__cell--non-numeric sos-field"><span>AT Log.</span></th>
+                        <th class="mdl-data-table__cell--non-numeric eos-field"><span>AT Est.</span></th>
+                        <th class="mdl-data-table__cell--non-numeric eos-field"><span>AT Remain.</span></th>
+                        <th class="mdl-data-table__cell--non-numeric sos-field"><span>TEST Log.</span></th>
+                        <th class="mdl-data-table__cell--non-numeric eos-field"><span>TEST Est.</span></th>
+                        <th class="mdl-data-table__cell--non-numeric eos-field"><span>TEST Remain.</span></th>
+                        <th class="mdl-data-table__cell--non-numeric eos-field"><span>DEV devi..</span></th>
+                        <th class="mdl-data-table__cell--non-numeric eos-field"><span>AT Time devi.</span></th>
+                        <th class="mdl-data-table__cell--non-numeric eos-field"><span>TEST Time devi.</span></th>
+                        <th class="mdl-data-table__cell--non-numeric non-export-field"><span>Status</span></th>
                     </tr>
                     </thead>
                     <tbody id= "sos-story-table-body">
@@ -175,6 +185,16 @@
                     <tfoot id= "sos-story-table-foot">
                     </tfoot>
                 </table>
+                <div>
+                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect"  id="switch-sos-label" for="switch-sos">
+                        <input type="checkbox" id="switch-sos" class="mdl-switch__input" checked>
+                        <span class="mdl-switch__label">End of sprint</span>
+                    </label>
+                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect"  id="switch-export-label" for="switch-export">
+                        <input type="checkbox" id="switch-export" class="mdl-switch__input" checked>
+                        <span class="mdl-switch__label">Export</span>
+                    </label>
+                </div>
             </div>
         </div>
     </body>
