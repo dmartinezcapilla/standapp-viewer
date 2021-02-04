@@ -2,25 +2,26 @@
 {
     var self;
 
-    const US_DESCRIPTION = 0;
-    const US_USP = 1;
-    const US_TYPE = 2;
-    const US_TYPE_ICON = 3;
-    const US_STATUS = 4;
-    const US_STATUS_ICON = 5;
-    const DEV_TIME_ESTIMATED = 6;
-    const DEV_TIME_LOGGED = 7;
-    const DEV_TIME_REMAINING = 8;
-    const DEV_DEVIATION = 9;
-    const AT_TIME_ESTIMATED = 10;
-    const AT_TIME_LOGGED = 11;
-    const AT_TIME_REMAINING = 12;
-    const AT_DEVIATION = 13;
-    const TEST_TIME_ESTIMATED = 14;
-    const TEST_TIME_LOGGED = 15;
-    const TEST_TIME_REMAINING = 16;
-    const TEST_DEVIATION = 17;
-    const STORY_DEVIATION = 18;
+    const US_KEY = 0;
+    const US_DESCRIPTION = 1;
+    const US_USP = 2;
+    const US_TYPE = 3;
+    const US_TYPE_ICON = 4;
+    const US_STATUS = 5;
+    const US_STATUS_ICON = 6;
+    const DEV_TIME_ESTIMATED = 7;
+    const DEV_TIME_LOGGED = 8;
+    const DEV_TIME_REMAINING = 9;
+    const DEV_DEVIATION = 10;
+    const AT_TIME_ESTIMATED = 11;
+    const AT_TIME_LOGGED = 12;
+    const AT_TIME_REMAINING = 13;
+    const AT_DEVIATION = 14;
+    const TEST_TIME_ESTIMATED = 15;
+    const TEST_TIME_LOGGED = 16;
+    const TEST_TIME_REMAINING = 17;
+    const TEST_DEVIATION = 18;
+    const STORY_DEVIATION = 19;
 
 
     function MetricsView(presenter)
@@ -81,6 +82,7 @@
                 var storyMetricsMap = new Map();
 
                 var summaryRowValues = [];
+                summaryRowValues[US_KEY] = "";
                 summaryRowValues[US_DESCRIPTION] = "TOTALS";
                 summaryRowValues[US_TYPE] ="";
                 summaryRowValues[US_TYPE_ICON] = "";
@@ -104,11 +106,14 @@
 
                 $.each( data.issues, function( key, issue )
                 {
+
                     var issueTypeUserStory = g_issuetype_map.user_story[issue.fields.issuetype.id];
+                    //console.log("Issue type: ", issue.fields.issuetype);
 
                     if(issueTypeUserStory != undefined)
                     {
                         var storyInitialRowValues = [];
+                        storyInitialRowValues[US_KEY] =issue.key;
                         storyInitialRowValues[US_DESCRIPTION] =issue.fields.summary;
                         storyInitialRowValues[US_USP] = issue.fields.customfield_10005;
                         storyInitialRowValues[US_TYPE] =issueTypeUserStory;
@@ -130,113 +135,115 @@
                         storyInitialRowValues[TEST_DEVIATION] = 0;
                         storyInitialRowValues[STORY_DEVIATION] = 0;
 
-                        storyMetricsMap.set(issue.key, storyInitialRowValues);
+                        storyMetricsMap.set(issue.id,  storyInitialRowValues);
 
                         // console.log("issue:", issue);
                     }
                     else {
                         var subtask = issue;
-                        var parentKey = subtask.fields.parent.key;
+                        var parentId = subtask.fields.parent.id;
 
-                        // console.log("issue:", issue);
-
-                        var timeEstimate = 0;
-                        var timeLogged = 0;
-                        var timeRemaining = 0;
-                        if (issue.fields.timetracking.originalEstimateSeconds) {
-                            timeEstimate+= issue.fields.timetracking.originalEstimateSeconds/3600;
-                        }
-                        if (issue.fields.timetracking.timeSpentSeconds) {
-                            timeLogged+= issue.fields.timetracking.timeSpentSeconds/3600;
-                        }
-                        if (issue.fields.timetracking.remainingEstimateSeconds) {
-                            timeRemaining+= issue.fields.timetracking.remainingEstimateSeconds/3600;
-                        }
-
-                        if (self.getSubtaskType(subtask) != "finding")
+                        if (storyMetricsMap.get(parentId) == undefined)
                         {
-                            var remTimeColIndex = -1;
-                            var estTimeColIndex = -1;
-                            var logTimeColIndex = -1;
-                            var deviationColIndex = -1;
-                            if (self.getSubtaskType(subtask) == "dev")
-                            {
-                                remTimeColIndex = DEV_TIME_REMAINING;
-                                estTimeColIndex = DEV_TIME_ESTIMATED;
-                                logTimeColIndex = DEV_TIME_LOGGED;
-                                deviationColIndex = DEV_DEVIATION;
-                            }
-                            else if (self.getSubtaskType(subtask) == "at")
-                            {
-                                remTimeColIndex = AT_TIME_REMAINING;
-                                estTimeColIndex = AT_TIME_ESTIMATED;
-                                logTimeColIndex = AT_TIME_LOGGED;
-                                deviationColIndex = AT_DEVIATION;
-                            }
-                            else if (self.getSubtaskType(subtask) == "test") {
-                                remTimeColIndex = TEST_TIME_REMAINING;
-                                estTimeColIndex = TEST_TIME_ESTIMATED;
-                                logTimeColIndex = TEST_TIME_LOGGED;
-                                deviationColIndex = TEST_DEVIATION;
-                            }
-
-                            storyMetricsMap.get(parentKey)[estTimeColIndex]+= timeEstimate;
-                            storyMetricsMap.get(parentKey)[logTimeColIndex]+= timeLogged;
-                            storyMetricsMap.get(parentKey)[remTimeColIndex]+= timeRemaining;
-                            storyMetricsMap.get(parentKey)[deviationColIndex] =
-                                (storyMetricsMap.get(parentKey)[logTimeColIndex]-
-                                storyMetricsMap.get(parentKey)[estTimeColIndex])
-                                /storyMetricsMap.get(parentKey)[estTimeColIndex];
-                            storyMetricsMap.get("Summary")[estTimeColIndex]+= timeEstimate;
-                            storyMetricsMap.get("Summary")[logTimeColIndex]+= timeLogged;
-                            storyMetricsMap.get("Summary")[remTimeColIndex]+= timeRemaining;
-                            storyMetricsMap.get("Summary")[deviationColIndex] =
-                                (storyMetricsMap.get("Summary")[logTimeColIndex]-
-                                    storyMetricsMap.get("Summary")[estTimeColIndex])
-                                /storyMetricsMap.get("Summary")[estTimeColIndex];
+                            console.log("There is an error with issue", issue);
                         }
-                        else // finding (half test, half dev)
+                        else
                         {
-                            storyMetricsMap.get(parentKey)[DEV_TIME_ESTIMATED]+= (timeEstimate/2);
-                            storyMetricsMap.get(parentKey)[TEST_TIME_ESTIMATED]+= (timeEstimate/2);
-                            storyMetricsMap.get(parentKey)[DEV_TIME_LOGGED]+= (timeLogged/2);
-                            storyMetricsMap.get(parentKey)[TEST_TIME_LOGGED]+= (timeLogged/2);
-                            storyMetricsMap.get(parentKey)[DEV_TIME_REMAINING]+= (timeRemaining/2);
-                            storyMetricsMap.get(parentKey)[TEST_TIME_REMAINING]+= (timeRemaining/2);
-                            storyMetricsMap.get(parentKey)[DEV_DEVIATION] =
-                                (storyMetricsMap.get(parentKey)[DEV_TIME_LOGGED]-
-                                    storyMetricsMap.get(parentKey)[DEV_TIME_ESTIMATED])
-                                /storyMetricsMap.get(parentKey)[DEV_TIME_ESTIMATED];
-                            storyMetricsMap.get(parentKey)[TEST_DEVIATION] =
-                                (storyMetricsMap.get(parentKey)[TEST_TIME_LOGGED]-
-                                    storyMetricsMap.get(parentKey)[TEST_TIME_ESTIMATED])
-                                /storyMetricsMap.get(parentKey)[TEST_TIME_ESTIMATED];
-                            storyMetricsMap.get(parentKey)[AT_DEVIATION] =
-                                (storyMetricsMap.get(parentKey)[AT_TIME_LOGGED]-
-                                    storyMetricsMap.get(parentKey)[AT_TIME_ESTIMATED])
-                                /storyMetricsMap.get(parentKey)[AT_TIME_ESTIMATED];
+                            var timeEstimate = 0;
+                            var timeLogged = 0;
+                            var timeRemaining = 0;
+                            if (issue.fields.timetracking.originalEstimateSeconds) {
+                                timeEstimate += issue.fields.timetracking.originalEstimateSeconds / 3600;
+                            }
+                            if (issue.fields.timetracking.timeSpentSeconds) {
+                                timeLogged += issue.fields.timetracking.timeSpentSeconds / 3600;
+                            }
+                            if (issue.fields.timetracking.remainingEstimateSeconds) {
+                                timeRemaining += issue.fields.timetracking.remainingEstimateSeconds / 3600;
+                            }
 
-                            storyMetricsMap.get("Summary")[DEV_TIME_ESTIMATED]+= (timeEstimate/2);
-                            storyMetricsMap.get("Summary")[DEV_TIME_LOGGED]+= (timeLogged/2);
-                            storyMetricsMap.get("Summary")[DEV_TIME_REMAINING]+= (timeRemaining/2);
-                            storyMetricsMap.get("Summary")[TEST_TIME_ESTIMATED]+= (timeEstimate/2);
-                            storyMetricsMap.get("Summary")[TEST_TIME_LOGGED]+= (timeLogged/2);
-                            storyMetricsMap.get("Summary")[TEST_TIME_REMAINING]+= (timeRemaining/2);
-                            storyMetricsMap.get("Summary")[AT_TIME_ESTIMATED]+= (timeEstimate/2);
-                            storyMetricsMap.get("Summary")[AT_TIME_LOGGED]+= (timeLogged/2);
-                            storyMetricsMap.get("Summary")[AT_TIME_REMAINING]+= (timeRemaining/2);
-                            storyMetricsMap.get("Summary")[DEV_DEVIATION] =
-                                (storyMetricsMap.get("Summary")[DEV_TIME_LOGGED]-
-                                    storyMetricsMap.get("Summary")[DEV_TIME_ESTIMATED])
-                                /storyMetricsMap.get("Summary")[DEV_TIME_ESTIMATED];
-                            storyMetricsMap.get("Summary")[TEST_DEVIATION] =
-                                (storyMetricsMap.get("Summary")[TEST_TIME_LOGGED]-
-                                    storyMetricsMap.get("Summary")[TEST_TIME_ESTIMATED])
-                                /storyMetricsMap.get("Summary")[TEST_TIME_ESTIMATED];
-                            storyMetricsMap.get("Summary")[AT_DEVIATION] =
-                                (storyMetricsMap.get("Summary")[AT_TIME_LOGGED]-
-                                    storyMetricsMap.get("Summary")[AT_TIME_ESTIMATED])
-                                /storyMetricsMap.get("Summary")[AT_TIME_ESTIMATED];
+                            if (self.getSubtaskType(subtask) != "finding") {
+                                var remTimeColIndex = -1;
+                                var estTimeColIndex = -1;
+                                var logTimeColIndex = -1;
+                                var deviationColIndex = -1;
+                                if (self.getSubtaskType(subtask) == "dev") {
+                                    remTimeColIndex = DEV_TIME_REMAINING;
+                                    estTimeColIndex = DEV_TIME_ESTIMATED;
+                                    logTimeColIndex = DEV_TIME_LOGGED;
+                                    deviationColIndex = DEV_DEVIATION;
+                                } else if (self.getSubtaskType(subtask) == "at") {
+                                    remTimeColIndex = AT_TIME_REMAINING;
+                                    estTimeColIndex = AT_TIME_ESTIMATED;
+                                    logTimeColIndex = AT_TIME_LOGGED;
+                                    deviationColIndex = AT_DEVIATION;
+                                } else if (self.getSubtaskType(subtask) == "test") {
+                                    remTimeColIndex = TEST_TIME_REMAINING;
+                                    estTimeColIndex = TEST_TIME_ESTIMATED;
+                                    logTimeColIndex = TEST_TIME_LOGGED;
+                                    deviationColIndex = TEST_DEVIATION;
+                                }
+                                /*console.log("parentKey", parentKey, estTimeColIndex);
+                                console.log(storyMetricsMap);
+                                console.log("Key", key);
+                                console.log("issue 2", issue);*/
+                                storyMetricsMap.get(parentId)[estTimeColIndex] += timeEstimate;
+                                storyMetricsMap.get(parentId)[logTimeColIndex] += timeLogged;
+                                storyMetricsMap.get(parentId)[remTimeColIndex] += timeRemaining;
+                                storyMetricsMap.get(parentId)[deviationColIndex] =
+                                    (storyMetricsMap.get(parentId)[logTimeColIndex] -
+                                        storyMetricsMap.get(parentId)[estTimeColIndex])
+                                    / storyMetricsMap.get(parentId)[estTimeColIndex];
+                                storyMetricsMap.get("Summary")[estTimeColIndex] += timeEstimate;
+                                storyMetricsMap.get("Summary")[logTimeColIndex] += timeLogged;
+                                storyMetricsMap.get("Summary")[remTimeColIndex] += timeRemaining;
+                                storyMetricsMap.get("Summary")[deviationColIndex] =
+                                    (storyMetricsMap.get("Summary")[logTimeColIndex] -
+                                        storyMetricsMap.get("Summary")[estTimeColIndex])
+                                    / storyMetricsMap.get("Summary")[estTimeColIndex];
+                            } else // finding (half test, half dev)
+                            {
+                                storyMetricsMap.get(parentId)[DEV_TIME_ESTIMATED] += (timeEstimate / 2);
+                                storyMetricsMap.get(parentId)[TEST_TIME_ESTIMATED] += (timeEstimate / 2);
+                                storyMetricsMap.get(parentId)[DEV_TIME_LOGGED] += (timeLogged / 2);
+                                storyMetricsMap.get(parentId)[TEST_TIME_LOGGED] += (timeLogged / 2);
+                                storyMetricsMap.get(parentId)[DEV_TIME_REMAINING] += (timeRemaining / 2);
+                                storyMetricsMap.get(parentId)[TEST_TIME_REMAINING] += (timeRemaining / 2);
+                                storyMetricsMap.get(parentId)[DEV_DEVIATION] =
+                                    (storyMetricsMap.get(parentId)[DEV_TIME_LOGGED] -
+                                        storyMetricsMap.get(parentId)[DEV_TIME_ESTIMATED])
+                                    / storyMetricsMap.get(parentId)[DEV_TIME_ESTIMATED];
+                                storyMetricsMap.get(parentId)[TEST_DEVIATION] =
+                                    (storyMetricsMap.get(parentId)[TEST_TIME_LOGGED] -
+                                        storyMetricsMap.get(parentId)[TEST_TIME_ESTIMATED])
+                                    / storyMetricsMap.get(parentId)[TEST_TIME_ESTIMATED];
+                                storyMetricsMap.get(parentId)[AT_DEVIATION] =
+                                    (storyMetricsMap.get(parentId)[AT_TIME_LOGGED] -
+                                        storyMetricsMap.get(parentId)[AT_TIME_ESTIMATED])
+                                    / storyMetricsMap.get(parentId)[AT_TIME_ESTIMATED];
+
+                                storyMetricsMap.get("Summary")[DEV_TIME_ESTIMATED] += (timeEstimate / 2);
+                                storyMetricsMap.get("Summary")[DEV_TIME_LOGGED] += (timeLogged / 2);
+                                storyMetricsMap.get("Summary")[DEV_TIME_REMAINING] += (timeRemaining / 2);
+                                storyMetricsMap.get("Summary")[TEST_TIME_ESTIMATED] += (timeEstimate / 2);
+                                storyMetricsMap.get("Summary")[TEST_TIME_LOGGED] += (timeLogged / 2);
+                                storyMetricsMap.get("Summary")[TEST_TIME_REMAINING] += (timeRemaining / 2);
+                                storyMetricsMap.get("Summary")[AT_TIME_ESTIMATED] += (timeEstimate / 2);
+                                storyMetricsMap.get("Summary")[AT_TIME_LOGGED] += (timeLogged / 2);
+                                storyMetricsMap.get("Summary")[AT_TIME_REMAINING] += (timeRemaining / 2);
+                                storyMetricsMap.get("Summary")[DEV_DEVIATION] =
+                                    (storyMetricsMap.get("Summary")[DEV_TIME_LOGGED] -
+                                        storyMetricsMap.get("Summary")[DEV_TIME_ESTIMATED])
+                                    / storyMetricsMap.get("Summary")[DEV_TIME_ESTIMATED];
+                                storyMetricsMap.get("Summary")[TEST_DEVIATION] =
+                                    (storyMetricsMap.get("Summary")[TEST_TIME_LOGGED] -
+                                        storyMetricsMap.get("Summary")[TEST_TIME_ESTIMATED])
+                                    / storyMetricsMap.get("Summary")[TEST_TIME_ESTIMATED];
+                                storyMetricsMap.get("Summary")[AT_DEVIATION] =
+                                    (storyMetricsMap.get("Summary")[AT_TIME_LOGGED] -
+                                        storyMetricsMap.get("Summary")[AT_TIME_ESTIMATED])
+                                    / storyMetricsMap.get("Summary")[AT_TIME_ESTIMATED];
+                            }
                         }
                     }
                 });
@@ -308,10 +315,10 @@
                 if (key != "Summary") {
                     rowData = $("<tr/>",
                     {
-                        id: key,
+                        id: value[US_KEY],
                         class: "story",
                         html:    "<td class='mdl-data-table__cell--non-numeric non-export-field'> " + value[US_TYPE_ICON] +"</td>" +
-                            "<td class='mdl-data-table__cell--non-numeric'> " + key +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric'> " + value[US_KEY] +"</td>" +
                             "<td class='mdl-data-table__cell--non-numeric'> <span>" + value[US_DESCRIPTION] +"</span></td>" +
                             "<td class='mdl-data-table__cell--non-numeric'> " + value[US_USP] +"</td>" +
                             "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringHours(value[DEV_TIME_LOGGED]) +"</td>" +
