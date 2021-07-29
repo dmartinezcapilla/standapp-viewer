@@ -21,7 +21,8 @@
     const TEST_TIME_LOGGED = 16;
     const TEST_TIME_REMAINING = 17;
     const TEST_DEVIATION = 18;
-    const STORY_DEVIATION = 19;
+    const FINDINGS_LOGGED = 19;
+    const STORY_DEVIATION = 20;
 
 
     function MetricsView(presenter)
@@ -100,6 +101,7 @@
                 summaryRowValues[TEST_TIME_LOGGED] = 0;
                 summaryRowValues[TEST_TIME_REMAINING] = 0;
                 summaryRowValues[TEST_DEVIATION] = 0;
+                summaryRowValues[FINDINGS_LOGGED] = 0;
                 summaryRowValues[STORY_DEVIATION] = 0;
                 storyMetricsMap.set("Summary", summaryRowValues);
 
@@ -133,6 +135,7 @@
                         storyInitialRowValues[TEST_TIME_LOGGED] = 0;
                         storyInitialRowValues[TEST_TIME_REMAINING] = 0;
                         storyInitialRowValues[TEST_DEVIATION] = 0;
+                        storyInitialRowValues[FINDINGS_LOGGED] = 0;
                         storyInitialRowValues[STORY_DEVIATION] = 0;
 
                         storyMetricsMap.set(issue.id,  storyInitialRowValues);
@@ -221,6 +224,7 @@
                                     (storyMetricsMap.get(parentId)[AT_TIME_LOGGED] -
                                         storyMetricsMap.get(parentId)[AT_TIME_ESTIMATED])
                                     / storyMetricsMap.get(parentId)[AT_TIME_ESTIMATED];
+                                storyMetricsMap.get(parentId)[FINDINGS_LOGGED] += timeLogged;
 
                                 storyMetricsMap.get("Summary")[DEV_TIME_ESTIMATED] += (timeEstimate / 2);
                                 storyMetricsMap.get("Summary")[DEV_TIME_LOGGED] += (timeLogged / 2);
@@ -243,6 +247,7 @@
                                     (storyMetricsMap.get("Summary")[AT_TIME_LOGGED] -
                                         storyMetricsMap.get("Summary")[AT_TIME_ESTIMATED])
                                     / storyMetricsMap.get("Summary")[AT_TIME_ESTIMATED];
+                                storyMetricsMap.get("Summary")[FINDINGS_LOGGED] += timeLogged
                             }
                         }
                     }
@@ -333,6 +338,7 @@
                             "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringPercentage(value[DEV_DEVIATION]) +"</td>" +
                             "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringPercentage(value[AT_DEVIATION]) +"</td>" +
                             "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringPercentage(value[TEST_DEVIATION]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringHours(value[FINDINGS_LOGGED]) +"</td>" +
                             "<td class='mdl-data-table__cell--non-numeric non-export-field'> " + value[US_STATUS_ICON] + "</td>"
                     });
                     rowData.appendTo($("#sos-story-table-body"));
@@ -364,6 +370,7 @@
                             "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringPercentage(value[DEV_DEVIATION]) +"</td>" +
                             "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringPercentage(value[AT_DEVIATION]) +"</td>" +
                             "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringPercentage(value[TEST_DEVIATION]) +"</td>" +
+                            "<td class='mdl-data-table__cell--non-numeric eos-field'> " + this.formatToStringHours(value[FINDINGS_LOGGED]) +"</td>" +
                             "<td class='non-export-field'></td>"
                     });
                 rowData.appendTo($("#sos-story-table-foot"));
