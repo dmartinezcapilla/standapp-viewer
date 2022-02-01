@@ -106,11 +106,35 @@
                 storyMetricsMap.set("Summary", summaryRowValues);
 
 
+                var snw_supportAnalyzer = new Map();
+                snw_supportAnalyzer["totalUser"] =  0;
+                snw_supportAnalyzer["totalOthers"] =  0;
+
+
                 $.each( data.issues, function( key, issue )
                 {
 
                     var issueTypeUserStory = g_issuetype_map.user_story[issue.fields.issuetype.id];
-                    //console.log("Issue type: ", issue.fields.issuetype);
+
+                    //console.log("Issue assignees: ", issue.fields.assignee);
+                    if (issue.fields.assignee && issue.fields.assignee.name == g_evaluatedUser) {
+
+                        $.each( issue.fields.worklog.worklogs, function( key2, worklog )
+                        {
+                            if (worklog.author.name == g_evaluatedUser){
+                                snw_supportAnalyzer["totalUser"] += worklog.timeSpentSeconds;
+                            }
+                            else{
+                                if (!snw_supportAnalyzer[worklog.author.name])
+                                {
+                                    snw_supportAnalyzer[worklog.author.name] = 0;
+                                }
+                                snw_supportAnalyzer[worklog.author.name] += worklog.timeSpentSeconds;
+                                snw_supportAnalyzer["totalOthers"] += worklog.timeSpentSeconds;
+                            }
+                        });
+                    }
+
 
                     if(issueTypeUserStory != undefined)
                     {
@@ -263,6 +287,9 @@
                 $('.eos-field').hide();
                 $('.sos-field').show();
                 $('.non-export-field').show();
+
+                snw_supportAnalyzer["%support"] =  snw_supportAnalyzer["totalOthers"] / (snw_supportAnalyzer["totalUser"] + snw_supportAnalyzer["totalOthers"]) * 100;
+                console.log("SNOW support analyzer", snw_supportAnalyzer);
             },
             enumerable: false
         },

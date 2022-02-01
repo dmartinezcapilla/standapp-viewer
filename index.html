@@ -204,7 +204,12 @@
     
 		var g_dev_users = [];
 		var g_qa_users = [];
-        var g_issuetype_map = {user_story: {"1": "Bug", "10200" : "Spike", "3" : "Task", "10001" : "Story", "10403" : "Integration", "10601" : "Systems Doc", "10600" : "Systems Test", "10401" : "Doc", "10100" : "Hardware Failure" }, task: {"5": "Sub-task" , "10800" : "Review", "10500" : "Finding"}};
+        IL: var g_issuetype_map = {user_story: {"1": "Bug", "10200" : "Spike", "3" : "Task", "10001" : "Story", "10403" : "Integration", "10601" : "Systems Doc", "10600" : "Systems Test", "10401" : "Doc", "10100" : "Hardware Failure" }, task: {"5": "Sub-task" , "10800" : "Review", "10500" : "Finding"}};
+
+        // SNOW
+        // var g_issuetype_map =  {user_story: {"9": "us", "10302" : "offsprint_us"}, task: {"12": "qa", "5": "dev", "10402": "at", "10303": "offsprint_task"}};
+        var g_evaluatedUser = "none";
+
         var g_status_map = {"1": "todo", "3": "progress", "10001": "done", "10704" : "done", "10600" : "progress", "10601" : "progress", "10602" : "progress", "10401" : "progress", "10000" : "todo", "10500" : "test", "10300" : "progress", "10400" : "progress", "10603" : "progress"};
         var g_estimate_field = "customfield_10003";
 		        
