@@ -1,0 +1,79 @@
+#randomize-facilitator
+{
+  transition: background-color .25s ease-in-out;
+  -moz-transition: background-color .25s ease-in-out;
+  -webkit-transition: background-color .25s ease-in-out;
+  background-color:rgba(0, 0, 0, 0);
+  display:none;
+}
+
+#randomize-facilitator.running
+{
+  position:absolute;
+  width:100vw;
+  height:100vh;
+  top:0;
+  left:0;
+  background-color:rgba(0, 0, 0, 0.7);
+  z-index:999;
+}
+
+#randomize-facilitator-content
+{
+  padding: 50px;
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+#close-randomize-facilitator-button
+{
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  height: 45px;
+  width: 45px;
+  margin: auto;
+  z-index: 999;
+  display:none;
+}
+
+#the-wheel
+{
+  float: left;
+  margin-top: 50px;
+  margin-left:50px;
+  max-width:600px;
+  height: 700px;
+  background-image: url(../img/wheel_back.png);
+  background-size: 600px;
+  background-position: center;
+  background-repeat: none;
+}
+
+#canvas 
+{
+  margin-top: 55px;
+}
+
+#reset-spin-button
+{
+  display:none;
+}
+
+#winner-container {
+  display: flex;
+  color: white;
+  padding: 40px;
+  margin: 40px;
+  font-size: 40px;
+  background-color: rgba(96, 96, 96, 0.667);
+}
+
+#winner-image {
+  float:left;
+  margin-right: 30px;
+}
+
+#winner-text {
+  line-height: 100px;
+}

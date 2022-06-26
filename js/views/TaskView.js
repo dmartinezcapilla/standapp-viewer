@@ -77,6 +77,7 @@
 
 				$("#loading").hide();
 				$("#start_standup").show();
+                $("#start_randomize_facilitator").show();
 				
                 componentHandler.upgradeAllRegistered();
             },

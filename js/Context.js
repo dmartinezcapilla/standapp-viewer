@@ -69,6 +69,13 @@ viewer.listeners = viewer.listeners || {};
             },
             enumerable: false
         },
+        getRandomizeFacilitatorView : {
+            value: function(presenter)
+            {
+                return new viewer.views.RandomizeFacilitatorView(presenter);
+            },
+            enumerable: false
+        },
         getWorkView : {
             value: function(presenter)
             {

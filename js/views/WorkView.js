@@ -90,6 +90,7 @@
 				$("#right_panel").hide();
 				$(".clock-container").hide();
 				$("#start_standup").show();
+                $("#start_randomize_facilitator").show();
                 $("#localVideo").hide();
 
                 $("#right_panel ul.users").children().removeClass("completed");

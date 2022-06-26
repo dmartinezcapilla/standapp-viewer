@@ -6,6 +6,7 @@
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="css/user_story.css">
         <link rel="stylesheet" href="css/scrum_helper.css">
+        <link rel="stylesheet" href="css/randomize_facilitator.css">
         <link rel="stylesheet" href="css/task.css">
         <link rel="stylesheet" href="css/countdown.css">
         <link rel="stylesheet" href="css/controls.css">
@@ -22,12 +23,15 @@
         <script src="lib/jquery/jquery.easing.js"></script>
         <script src="lib/jquery/jquery.easypiechart.js"></script>
         <script src="lib/simplewebrtc-with-adapter.bundle.js"></script>
+        <script src="lib/Winwheel.min.js"></script>
+        <script src="lib/TweenMax.min.js"></script>
         <script src="js/Context.js"></script>
         <script src="js/views/BoardView.js"></script>
         <script src="js/views/SprintView.js"></script>
         <script src="js/views/UserStoryView.js"></script>
         <script src="js/views/TaskView.js"></script>
         <script src="js/views/MetricsView.js"></script>
+        <script src="js/views/RandomizeFacilitatorView.js"></script>
         <script src="js/views/WorkView.js"></script>
         <script src="js/views/MasterView.js"></script>
         <script src="js/WorkPieChart.js"></script>
@@ -126,8 +130,12 @@
                 <button id="start_standup" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
                     <i class="material-icons">record_voice_over</i>
                 </button>
+                <button id="start_randomize_facilitator" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+                    <i class="material-icons">shuffle</i>
+                </button>
             </div>
         </div>
+        
         <div id="localVideo"></div>
 		<div id="context-menu"></div>
         <div id="upgrade"><i class="fas fa-flag"></i>Viewer <span></span> has been installed, click <a href="#">Reload</a>. You can <a href="https://github.com/lurume84/standapp-viewer/releases" target="_blank">read more</a> about changes in this release.</div>
@@ -150,6 +158,34 @@
             <i class="fas fa-exclamation-triangle"></i>
             <div class="mdl-snackbar__text"></div>
             <button class="mdl-snackbar__action" type="button"></button>
+        </div>
+        <div id="randomize-facilitator">
+            <div>
+                <button id="close-randomize-facilitator-button" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+                    <i class="material-icons">clear</i>
+                </button>
+            </div>
+            <div id="randomize-facilitator-content">
+                <button id="start-spin-button" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+                    <i class="material-icons">shuffle</i>
+                </button>
+                <button id="reset-spin-button" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+                    <i class="material-icons">refresh</i>
+                </button>
+                <div width="700" height="700" class="the_wheel" id="the-wheel">
+                    <canvas id="canvas" width="600" height="600">
+                        <p>Sorry, your browser doesn't support canvas. Please try another.</p>
+                    </canvas>
+                </div>
+                <div id="winner-container">
+                    <div id="winner-image">
+                    </div>
+                    <div id="winner-text">
+                    </div>
+                </div>
+
+            </div>
+
         </div>
 		<div id="scrum-helper">
             <div>

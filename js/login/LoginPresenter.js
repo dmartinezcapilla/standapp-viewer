@@ -13,6 +13,7 @@
         this.userStoryView = Context.getIssuePresenter().userStoryView;
         this.taskView = Context.getIssuePresenter().taskView;
         this.metricsView = Context.getIssuePresenter().metricsView;
+        this.randomizeFacilitatorView = Context.getIssuePresenter().randomizeFacilitatorView;
         this.workView = Context.getIssuePresenter().workView;
 		this.masterView = Context.getIssuePresenter().masterView;
     }
@@ -57,6 +58,7 @@
 													self.userStoryView.init();
 													self.taskView.init();
 													self.metricsView.init();
+                                                    self.randomizeFacilitatorView.init();
 												});
                     },
                     function(data)

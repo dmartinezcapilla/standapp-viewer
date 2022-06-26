@@ -21,6 +21,7 @@
 					$("#standup > #right_panel .users").html("");
 					$("#loading").show();
 					$("#start_standup").hide();
+                    $("#start_randomize_facilitator").hide();
 					
                     self.presenter.getList($("#boardList").val(), $(this).val());
                 });

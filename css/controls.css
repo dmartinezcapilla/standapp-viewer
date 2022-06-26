@@ -10,6 +10,19 @@
     display: none;
 }
 
+#start_randomize_facilitator
+{
+    position: fixed;
+    bottom: 25px;
+    right: 100px;
+    height: 55px;
+    width: 55px;
+    margin: auto;
+    z-index: 999;
+    display: none;
+}
+
+
 #right_panel
 {
 	position:fixed;

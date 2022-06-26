@@ -289,7 +289,7 @@
                 $('.non-export-field').show();
 
                 snw_supportAnalyzer["%support"] =  snw_supportAnalyzer["totalOthers"] / (snw_supportAnalyzer["totalUser"] + snw_supportAnalyzer["totalOthers"]) * 100;
-                console.log("SNOW support analyzer", snw_supportAnalyzer);
+                // console.log("SNOW support analyzer", snw_supportAnalyzer);
             },
             enumerable: false
         },
