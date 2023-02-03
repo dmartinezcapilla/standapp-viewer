@@ -55,6 +55,11 @@
   margin-right: calc(1em + 32px + 5px);
 }
 
+.user_story .avatar-captain
+{
+  margin-right:10px;
+}
+
 .user_story .number
 {
   border-bottom: 1px solid transparent;

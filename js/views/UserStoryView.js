@@ -56,8 +56,16 @@
                         }
 
                         var us = $("<ul/>", {id: issue.key});
-                        
-						var user_story = $("<li/>", {class: "user_story"}).append("<img class=\"issuetype\" src=\"" + issue.fields.issuetype.iconUrl + "\"/>" +
+
+                        var avatarUrl = "";
+                        if (issue.fields.assignee != null)
+                        {
+                            avatarUrl = issue.fields.assignee.avatarUrls["32x32"];
+                        }
+
+						var user_story = $("<li/>", {class: "user_story"}).append(
+                                        "<img class=\"avatar-captain\" id=\"" + issue.key + "_avatar_captain\" src='" + avatarUrl + "'>" +
+                                        "<img class=\"issuetype\" src=\"" + issue.fields.issuetype.iconUrl + "\"/>" +
                                         estimate +
                                         "<a class=\"number " + numberClass +"\" href=\"#\">" + issue.key +"</a>" +
                                         "<img class=\"priority\" src=\"" + issue.fields.priority.iconUrl + "\"/>" +
