@@ -1,52 +1,47 @@
-(function(views)
-{
-    var self;
+(function (views) {
+  var self;
 
-    function BoardView(presenter)
-    {
-        this.presenter = presenter;
-    }
+  function BoardView(presenter) {
+    this.presenter = presenter;
+  }
 
-    Object.defineProperties(BoardView.prototype,
-    {
-        init : {
-            value: function()
-            {
-                var self = this;
+  Object.defineProperties(BoardView.prototype, {
+    init: {
+      value: function () {
+        var self = this;
 
-                $("#boardList").html("");
-					
-                self.presenter.getList();
+        $("#boardList").html("");
 
-                $('#content').kinetic({cursor: "auto"});
-            },
-            enumerable: false
-        },
+        self.presenter.getList();
 
-        load : {
-            value: function(data)
-            {
-                $.each( data.values, function( key, value )
-                {
-                    $("#boardList").append("<option value='" + value.id + "'>" + value.name + "</option>")
-                });
+        $("#content").kinetic({ cursor: "auto" });
+      },
+      enumerable: false,
+    },
 
-                if(data.isLast)
-                {
-                    $("#boardList").change();
-                }
-            },
-            enumerable: false
-        },
+    load: {
+      value: function (data) {
+        console.log({ data });
+        $.each(data.values, function (key, value) {
+          $("#boardList").append(
+            `<option value="${value.id}">${value.name}</option>`,
+          );
+        });
 
-        showError : {
-            value: function(data)
-            {
-                console.log(data);
-            },
-            enumerable: false
+        if (data.isLast) {
+          $("#boardList").change();
         }
-    });
+      },
+      enumerable: false,
+    },
 
-    views.BoardView = BoardView;
+    showError: {
+      value: function (data) {
+        console.log(data);
+      },
+      enumerable: false,
+    },
+  });
+
+  views.BoardView = BoardView;
 })(viewer.views);

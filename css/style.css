@@ -1,48 +1,44 @@
-html
-{
-    background-color:rgba(255, 255, 255, 0.4);
+html {
+  background-color: rgba(255, 255, 255, 0.4);
 }
 
 *::-webkit-scrollbar {
-    width: 5px;
+  width: 5px;
 }
- 
+
 *::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
- 
+
 *::-webkit-scrollbar-thumb {
   background-color: darkgrey;
   outline: 1px solid slategrey;
 }
 
-*, *:before, *:after
-{
-    box-sizing: border-box;
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
 }
 
-#header
-{
-    width:100vw;
-    height:6vh;
+#header {
+  width: 100vw;
+  height: 6vh;
 }
 
-#header > ul
-{
-    padding:0;
-    margin:0;
+#header > ul {
+  padding: 0;
+  margin: 0;
 }
 
-#header > ul > li
-{
-    float:left;
-    list-style-type:none;
-    width:20%;
-    padding: 1vh;
+#header > ul > li {
+  float: left;
+  list-style-type: none;
+  width: 20%;
+  padding: 1vh;
 }
 
-#header > ul > li > div
-{
+#header > ul > li > div {
   margin-top: 0;
   padding-bottom: 1vh;
   border-bottom: 3px solid #dbdbdb;
@@ -50,230 +46,203 @@ html
   font-weight: 300;
 }
 
-#content
-{
-    width:100vw;
-    height:92vh;
-    overflow-y: hidden;
+#content {
+  width: 100vw;
+  height: 92vh;
+  overflow-y: hidden;
 }
 
-#content > ul
-{
-    width:100%;
-    height:100px;
-    padding:0;
-    margin:0;
+#content > ul {
+  width: 100%;
+  height: 100px;
+  padding: 0;
+  margin: 0;
 }
 
-#content > ul:nth-child(odd)
-{
-    background-color: whitesmoke;
+#content > ul:nth-child(odd) {
+  background-color: whitesmoke;
 }
 
-#content > ul:nth-child(even)
-{
-    background-color: white;
+#content > ul:nth-child(even) {
+  background-color: white;
 }
 
-#content > ul > li
-{
-    float:left;
-    list-style-type:none;
-    width:20%;
-    height:100px;
-    overflow-y:auto;
+#content > ul > li {
+  float: left;
+  list-style-type: none;
+  width: 20%;
+  height: 100px;
+  overflow-y: auto;
 }
 
-#content > ul > li.rejected
-{
-    display:none;
+#content > ul > li.rejected {
+  display: none;
 }
 
-#content > ul > li > ul
-{
-    padding:0 5px 0 5px;
-    margin:0;
+#content > ul > li > ul {
+  padding: 0 5px 0 5px;
+  margin: 0;
 }
 
-#boardList, #sprintList
-{
-    height:90%;
+#boardList,
+#sprintList {
+  height: 90%;
 }
 
-#boardList, #sprintList
-{
-    float:left;
-    width:47%;
-    margin-left:1%;
-    border:0px;
-    outline:0px;
-    font-size: 1vw;
+#boardList,
+#sprintList {
+  float: left;
+  width: 47%;
+  margin-left: 1%;
+  border: 0px;
+  outline: 0px;
+  font-size: 1vw;
 }
 
-#sprintList
-{
-    width:32%;
+#sprintList {
+  width: 32%;
 }
 
-#logo
-{
-    margin-top:8px;
-    float:left;
+#logo {
+  margin-top: 8px;
+  float: left;
 }
 
-#loading
-{
-	position:absolute;
-	width:100%;
-	top:64px;
-	display:none;
+#loading {
+  position: absolute;
+  width: 100%;
+  top: 64px;
+  display: none;
 }
 
-#login .progress
-{
-    display: none;
+#login .progress {
+  display: none;
 }
 
-.content .progress
-{
-    width:100%;
+.content .progress {
+  width: 100%;
 }
 
-#footer
-{
-    position:fixed;
-    bottom:0;
-    z-index:1;
-    width:100%;
-    height:50px;
-    background-color:rgba(42,42,42,1);
+#footer {
+  position: fixed;
+  bottom: 0;
+  z-index: 1;
+  width: 100%;
+  height: 50px;
+  background-color: rgba(42, 42, 42, 1);
 }
 
-#clockNow2
-{
-    position:relative;
-    width:100px;
-    height:100%;
-    line-height:50px;
-    float:left;
+#clockNow2 {
+  position: relative;
+  width: 100px;
+  height: 100%;
+  line-height: 50px;
+  float: left;
 }
 
-.divider
-{
-    position:relative;
-    height:40px;
-    width:5px;
-    margin-top:5px;
-    margin-left:10px;
-    border-left:2px solid white;
-    float:left;
+.divider {
+  position: relative;
+  height: 40px;
+  width: 5px;
+  margin-top: 5px;
+  margin-left: 10px;
+  border-left: 2px solid white;
+  float: left;
 }
 
-.log
-{
-    position:relative;
-    line-height:50px;
-    height:50px;
-    width:500px;
-    margin-left:5px;
-    float:left;
-    color:#fff;
-    font-size: 1vw;
+.log {
+  position: relative;
+  line-height: 50px;
+  height: 50px;
+  width: 500px;
+  margin-left: 5px;
+  float: left;
+  color: #fff;
+  font-size: 1vw;
 }
 
-#toast i
-{
-    position: absolute;
-    color: #fff;
-    font-size: 20px;
-    padding: 15px;
+#toast i {
+  position: absolute;
+  color: #fff;
+  font-size: 20px;
+  padding: 15px;
 }
 
-#toast div
-{
-    margin-left: 30px;
+#toast div {
+  margin-left: 30px;
 }
 
-#draggable-window 
-{
+#draggable-window {
   -webkit-app-region: drag;
   position: fixed;
   top: 0px;
   left: 0px;
   width: calc(100% - 200px);
   height: 30px;
-  z-index:999;
+  z-index: 999;
 }
 
-#toolbar-window
-{
+#toolbar-window {
   position: fixed;
   top: 0px;
   right: 0px;
   height: 30px;
-  z-index:997;
+  z-index: 997;
 }
 
-#toolbar-window > div
-{
+#toolbar-window > div {
   width: 50px;
-  height: 30px; 
-  text-align:center;
-  float:left;
+  height: 30px;
+  text-align: center;
+  float: left;
 }
 
-#toolbar-window > div i
-{
+#toolbar-window > div i {
   margin-top: 8px;
 }
 
-#toolbar-window .close:hover
-{
-  background-color: #CD1A2B;
+#toolbar-window .close:hover {
+  background-color: #cd1a2b;
   color: #fff;
 }
 
-#toolbar-window .advanced:hover, .minimize:hover, .maximize:hover
-{
+#toolbar-window .advanced:hover,
+.minimize:hover,
+.maximize:hover {
   background-color: #535353;
   color: #fff;
 }
 
-.mdl-snackbar__action
-{
-    color: rgb(255,215,64)!important;
+.mdl-snackbar__action {
+  color: rgb(255, 215, 64) !important;
 }
 
-#upgrade
-{
-    display:none;
-    position:fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 20px;
-    line-height: 20px;
-    color: #fff;
-    padding: 5px;
-    z-index: 999;
-    background-color: #1073D6;
-    cursor: pointer;
+#upgrade {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 20px;
+  line-height: 20px;
+  color: #fff;
+  padding: 5px;
+  z-index: 999;
+  background-color: #1073d6;
+  cursor: pointer;
 }
 
-#upgrade i
-{
-    padding-right: 5px;
-    padding-left: 5px;
+#upgrade i {
+  padding-right: 5px;
+  padding-left: 5px;
 }
 
-#upgrade a
-{
-    color: #fff;
-    font-weight: 600;
+#upgrade a {
+  color: #fff;
+  font-weight: 600;
 }
 
-tfoot
-{
-    font-weight: bold;
-    font-size: 14px;
+tfoot {
+  font-weight: bold;
+  font-size: 14px;
 }

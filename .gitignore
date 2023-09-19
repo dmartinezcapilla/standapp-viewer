@@ -1,2 +1,5 @@
 .vscode/
 token.json
+node_modules
+.idea
+data
