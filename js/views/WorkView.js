@@ -224,7 +224,7 @@
 
         var element = $("#" + userKey + "_user");
 
-        if (element.length == 0) {
+        if (element.length === 0) {
           element = $("<li/>", {
             id: userKey + "_user",
             "data-name": user.displayName,
@@ -256,13 +256,13 @@
         $("#right_panel ul.users").html("");
 
         $.each(data.issues, function (key, issue) {
-          if (issue.fields.assignee != undefined) {
+          if (issue.fields.assignee) {
             var user = self.createUser(issue.fields.assignee);
 
             var status = g_status_map[issue.fields.status.id];
 
             if (!issue.fields.worklog.worklogs.length) {
-              if (status != "rejected") {
+              if (status !== "rejected") {
                 user
                   .children(".worklog")
                   .data("pie")
@@ -278,7 +278,6 @@
 
           $.each(issue.fields.worklog.worklogs, function (key2, worklog) {
             var user = self.createUser(worklog.author);
-
             user
               .children(".worklog")
               .data("pie")

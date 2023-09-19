@@ -308,3 +308,31 @@
   > li.task {
   height: 25%;
 }
+
+#input-worklog {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  position: absolute;
+  bottom: 300px;
+  width: 100%;
+  text-align: center;
+  color: white;
+}
+
+#input-worklog > p {
+  color: white;
+  font-size: 20px;
+}
+
+#input-worklog > section {
+  display: flex;
+  justify-content: center;
+}
+
+#input-worklog #sad-emoji {
+  display: none;
+  width: 40px;
+  height: 30px;
+}
