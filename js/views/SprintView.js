@@ -13,6 +13,9 @@
         $("#sprintList").html("");
 
         $("#boardList").change(function () {
+          const $selectedOption = $("#boardList option:selected");
+          const boardId = $selectedOption.val();
+          self.presenter.saveDefaultBoard(boardId);
           $("#sprintList").html("");
 
           self.presenter.getList($(this).val());

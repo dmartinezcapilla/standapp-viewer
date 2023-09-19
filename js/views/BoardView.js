@@ -20,17 +20,21 @@
     },
 
     load: {
-      value: function (data) {
-        console.log({ data });
+      value: function (data, defaultBoard) {
         $.each(data.values, function (key, value) {
-          $("#boardList").append(
-            `<option value="${value.id}">${value.name}</option>`,
-          );
+          const optionElement = `<option value="${value.id}">${value.name}</option>`;
+          $("#boardList").append(optionElement);
         });
-
-        if (data.isLast) {
-          $("#boardList").change();
-        }
+        //
+        // if (defaultBoard) {
+        //   $(`#boardList option[value="${defaultBoard.boardId}"]`).attr(
+        //     "selected",
+        //     "selected",
+        //   );
+        // }
+        // if (data.isLast) {
+        //   $("#boardList").change();
+        // }
       },
       enumerable: false,
     },

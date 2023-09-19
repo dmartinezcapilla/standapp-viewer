@@ -28,6 +28,21 @@
       },
       enumerable: false,
     },
+    saveDefaultBoard: {
+      value: function (boardId) {
+        var self = this;
+        const listener = new viewer.listeners.BaseDecisionListener(
+          function (data) {
+            console.log({ data });
+          },
+          function (data) {
+            console.log("Error ", data);
+          },
+        );
+        this.interactor.saveDefaultBoard(boardId, listener);
+      },
+      enumerable: false,
+    },
   });
 
   presenters.SprintPresenter = SprintPresenter;
