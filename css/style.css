@@ -34,8 +34,15 @@ html {
 #header > ul > li {
   float: left;
   list-style-type: none;
-  width: 20%;
   padding: 1vh;
+}
+
+#header > ul > li:first-child {
+  width: 20%;
+}
+
+#header > ul > li {
+  width: calc(80% / 3);
 }
 
 #header > ul > li > div {
@@ -59,6 +66,10 @@ html {
   margin: 0;
 }
 
+#content > ul.expanded {
+  height: 250px;
+}
+
 #content > ul:nth-child(odd) {
   background-color: whitesmoke;
 }
@@ -70,9 +81,20 @@ html {
 #content > ul > li {
   float: left;
   list-style-type: none;
-  width: 20%;
   height: 100px;
   overflow-y: auto;
+}
+
+#content > ul.expanded > li {
+  height: 250px;
+}
+
+#content > ul > li:first-child {
+  width: 20%;
+}
+
+#content > ul > li {
+  width: calc(80% / 3);
 }
 
 #content > ul > li.rejected {
@@ -245,4 +267,10 @@ html {
 tfoot {
   font-weight: bold;
   font-size: 14px;
+}
+
+.expand-link {
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }

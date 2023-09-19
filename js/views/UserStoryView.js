@@ -54,12 +54,14 @@
             var user_story = $("<li/>", { class: "user_story" })
               .append(
                 `<img class="avatar-captain" id="${issue.key}_avatar_captain" src="${avatarUrl}">
-              <img class="issuetype" src="${issue.fields.issuetype.iconUrl}"/>${estimate}
-              <a class="number ${numberClass}" href="#">${issue.key}</a>
-              <img class="priority" src="${issue.fields.priority.iconUrl}"/>
-              <p class="title">
-                ${issue.fields.summary}
-              </p>`,
+                <img class="issuetype" src="${issue.fields.issuetype.iconUrl}"/>${estimate}
+                <a class="number ${numberClass}" href="#">${issue.key}</a>
+                <img class="priority" src="${issue.fields.priority.iconUrl}"/>
+                <p class="title">
+                  ${issue.fields.summary}
+                </p>
+                <a href="#" class="expand-link" data-issue-id="${issue.key}">Expand</a>
+                `,
               )
               .appendTo(us);
 
@@ -73,9 +75,9 @@
 
             $("<li/>", { class: "todo", html: "<ul></ul>" }).appendTo(us);
             $("<li/>", { class: "progress", html: "<ul></ul>" }).appendTo(us);
-            $("<li/>", { class: "test", html: "<ul></ul>" }).appendTo(us);
+            // $("<li/>", { class: "test", html: "<ul></ul>" }).appendTo(us);
             $("<li/>", { class: "done", html: "<ul></ul>" }).appendTo(us);
-            $("<li/>", { class: "rejected", html: "<ul></ul>" }).appendTo(us);
+            // $("<li/>", { class: "rejected", html: "<ul></ul>" }).appendTo(us);
 
             if (status === "done") {
               completed_user_stories.push(us);

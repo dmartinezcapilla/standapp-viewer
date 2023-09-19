@@ -14,7 +14,7 @@
       value: function (user) {
         var element = $("#" + user.key + "_user");
 
-        if (element.length == 0) {
+        if (element.length === 0) {
           element = $("<li/>", {
             id: user.key + "_user",
             "data-name": user.displayName,
