@@ -16,46 +16,45 @@
         $.each(data.issues, function (key, issue) {
           var issueType = g_issuetype_map.task[issue.fields.issuetype.id];
 
-          if (issueType != undefined && issue.fields.parent != undefined) {
+          if (
+            issueType !== undefined &&
+            issue.fields.parent !== undefined &&
+            issueType
+          ) {
             var parent = $("#" + issue.fields.parent.key);
 
             if (parent.length) {
               var assignee = "";
 
-              if (issue.fields.assignee != undefined) {
-                assignee =
-                  "<div class='assignee'>" +
-                  '   <img id="' +
-                  issue.key +
-                  "_avatar\" src='" +
-                  issue.fields.assignee.avatarUrls["32x32"] +
-                  "'>" +
-                  '   <div class="mdl-tooltip" data-mdl-for="' +
-                  issue.key +
-                  '_avatar">' +
-                  issue.fields.assignee.name +
-                  "</div>" +
-                  "</div>";
+              if (
+                issue.fields.assignee !== undefined &&
+                issue.fields.assignee
+              ) {
+                assignee = `<div class='assignee'>
+                    <img id="${issue.key}_avatar" src="${issue.fields.assignee.avatarUrls["32x32"]}" \>
+                    <div class="mdl-tooltip" data-mdl-for="${issue.key}_avatar">
+                        ${issue.fields.assignee.name}
+                    </div>
+                  </div>`;
               }
+
+              // id: 1, name: 'Urgent'
+              // id: 2, name: 'High'
+              // id: 3, name: 'Medium'
+              // id: 4, name: 'Low'
 
               var task = $("<li/>", {
                 id: issue.key,
                 class: "task " + issueType,
-                html:
-                  assignee +
-                  "<a class='number'>" +
-                  issue.key +
-                  "</a>" +
-                  '<div class="mdl-tooltip" data-mdl-for="' +
-                  issue.key +
-                  '_link">' +
-                  issue.fields.summary +
-                  "</div>" +
-                  '<div id="' +
-                  issue.key +
-                  '_link" class="title">' +
-                  issue.fields.summary +
-                  "</div>",
+                html: `${assignee}
+                  <img class="priority-icon" src="${issue.fields.priority.iconUrl}" \>
+                  <a class='number'> ${issue.key} </a>
+                  <div class="mdl-tooltip" data-mdl-for="${issue.key}_link">
+                    ${issue.fields.summary}
+                  </div>
+                  <div id="${issue.key}_link" class="title">
+                    ${issue.fields.summary}
+                  </div>`,
               });
 
               $("<div/>", { class: "progress mdl-progress mdl-js-progress" })
@@ -69,8 +68,8 @@
               var status = g_status_map[issue.fields.status.id];
 
               if (
-                (status == "test" && issueType == "dev") ||
-                status == "rejected"
+                (status === "test" && issueType === "dev") ||
+                status === "rejected"
               ) {
                 parent.children(".done").append(task);
               } else {

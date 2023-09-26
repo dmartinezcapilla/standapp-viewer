@@ -28,7 +28,6 @@
   Object.defineProperties(WorkPieChart.prototype, {
     init: {
       value: function (worklog) {
-        console.log("Pie init");
         self = this;
 
         this.tasks_container = $("<div/>", { class: "tasks" })
@@ -44,7 +43,6 @@
     },
     createPieChart: {
       value: function (parent, title, data) {
-        console.log("Pie pie chart");
         self = this;
         data.datasets.forEach((dataset) => {
           dataset.data.forEach((d) => {
@@ -178,7 +176,6 @@
     },
     createBarChart: {
       value: function (parent, data) {
-        console.log("Pie bar chart");
         parent.children("canvas").remove();
         var canvas = $("<canvas/>").appendTo(parent);
 
@@ -258,7 +255,6 @@
     },
     addWorkLog: {
       value: function (issue, created, seconds) {
-        console.log("Pie add worklog");
         created = moment(created);
 
         var today = moment().startOf("day");
@@ -278,7 +274,6 @@
     },
     append: {
       value: function (date, issue, seconds) {
-        console.log("Pie append");
         date = date.format("YYYY-MM-DD");
 
         if (this.issues[issue.key] == undefined) {
@@ -295,7 +290,6 @@
     },
     renderPie: {
       value: function (parent, container, today, lastDay) {
-        console.log("Pie render pie");
         var data = {
           labels: [],
           datasets: [
@@ -345,7 +339,6 @@
     },
     renderBar: {
       value: function (issue, container) {
-        console.log("Pie render bar");
         var barChartData = {
           labels: [],
           datasets: [
@@ -387,7 +380,6 @@
     },
     renderInfo: {
       value: function (parent, container, today, lastDay) {
-        console.log("Pie render info");
         var i = 0;
         for (var key in this.issues) {
           var element = this.issues[key];
@@ -439,7 +431,6 @@
     },
     renderTasks: {
       value: function (today, lastDay) {
-        console.log("Pie render tasks");
         this.tasks_container.html("");
         var container = $("<ul/>").appendTo(this.tasks_container);
 
@@ -534,7 +525,6 @@
     },
     show: {
       value: function (data) {
-        console.log("Pie show");
         this.worklog = 0;
         this.renderTasks(moment().startOf("day"), this.lastDay);
       },
