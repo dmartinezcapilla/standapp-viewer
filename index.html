@@ -1,272 +1,443 @@
 <html lang="en">
-    <head>
-        <meta charset="UTF-8"/>
-        <link rel="stylesheet" href="lib/mdl/material.min.css">
-        <link rel="stylesheet" href="lib/fontawesome/css/all.min.css">
-        <link rel="stylesheet" href="css/style.css">
-        <link rel="stylesheet" href="css/user_story.css">
-        <link rel="stylesheet" href="css/scrum_helper.css">
-        <link rel="stylesheet" href="css/randomize_facilitator.css">
-        <link rel="stylesheet" href="css/task.css">
-        <link rel="stylesheet" href="css/countdown.css">
-        <link rel="stylesheet" href="css/controls.css">
-        <link rel="stylesheet" href="css/work.css">
-        <link rel="stylesheet" href="css/master.css">
-        <link rel="stylesheet" href="css/fonts.css">
-        <link rel="stylesheet" href="css/clocks.css">
-        <link rel="stylesheet" href="css/videochat.css">
-        <script src="lib/jquery/jquery.min.js"></script>
-        <script src="lib/mdl/material.min.js"></script>
-        <script src="lib/moment.min.js"></script>
-        <script src="lib/Chart.bundle.min.js"></script>
-        <script src="lib/jquery/jquery.kinetic.min.js"></script>
-        <script src="lib/jquery/jquery.easing.js"></script>
-        <script src="lib/jquery/jquery.easypiechart.js"></script>
-        <script src="lib/simplewebrtc-with-adapter.bundle.js"></script>
-        <script src="lib/Winwheel.min.js"></script>
-        <script src="lib/TweenMax.min.js"></script>
-        <script src="js/Context.js"></script>
-        <script src="js/views/BoardView.js"></script>
-        <script src="js/views/SprintView.js"></script>
-        <script src="js/views/UserStoryView.js"></script>
-        <script src="js/views/TaskView.js"></script>
-        <script src="js/views/MetricsView.js"></script>
-        <script src="js/views/RandomizeFacilitatorView.js"></script>
-        <script src="js/views/WorkView.js"></script>
-        <script src="js/views/MasterView.js"></script>
-        <script src="js/WorkPieChart.js"></script>
-        <script src="js/interactors/BoardInteractor.js"></script>
-        <script src="js/interactors/SprintInteractor.js"></script>
-        <script src="js/interactors/IssueInteractor.js"></script>
-        <script src="js/presenters/BoardPresenter.js"></script>
-        <script src="js/presenters/SprintPresenter.js"></script>
-        <script src="js/presenters/IssuePresenter.js"></script>
-        <script src="js/helpers/Utils.js"></script>
-        <script src="js/helpers/BaseDecisionListener.js"></script>
-        <script src="js/login/LoginView.js"></script>
-        <script src="js/login/LoginInteractor.js"></script>
-        <script src="js/login/LoginPresenter.js"></script>
-        <script src="js/videochat/VideoChatView.js"></script>
-        <script src="js/videochat/VideoChatInteractor.js"></script>
-        <script src="js/videochat/VideoChatPresenter.js"></script>
-        <title>Stand Up</title>
-    </head>
-    <body>
-        <dialog id="login" class="mdl-dialog">
-            <h4 class="mdl-dialog__title"><i class="fas fa-chalkboard-teacher"></i> Stand Up</h4>
-            <form action="#">
-              <div class="mdl-dialog__content">
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <input class="mdl-textfield__input user" type="text" id="userInput"/>
-                  <label class="mdl-textfield__label" for="userInput">Username...</label>
-                </div>
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input password" type="password" id="passwordInput"/>
-                    <label class="mdl-textfield__label" for="passwordInput">Password...</label>
-                </div>
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <input class="mdl-textfield__input server" type="text" id="serverInput"/>
-                  <label class="mdl-textfield__label" for="serverInput">Server...</label>
-                </div>
-                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1">
-                    <input type="radio" id="option-1" class="mdl-radio__button" name="options" value="1" checked>
-                    <span class="mdl-radio__label blink_label">JIRA</span>
-                </label>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="lib/mdl/material.min.css" />
+    <link rel="stylesheet" href="lib/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/user_story.css" />
+    <link rel="stylesheet" href="css/scrum_helper.css" />
+    <link rel="stylesheet" href="css/randomize_facilitator.css" />
+    <link rel="stylesheet" href="css/task.css" />
+    <link rel="stylesheet" href="css/countdown.css" />
+    <link rel="stylesheet" href="css/controls.css" />
+    <link rel="stylesheet" href="css/work.css" />
+    <link rel="stylesheet" href="css/master.css" />
+    <link rel="stylesheet" href="css/fonts.css" />
+    <link rel="stylesheet" href="css/clocks.css" />
+    <link rel="stylesheet" href="css/videochat.css" />
+    <script src="lib/jquery/jquery.min.js"></script>
+    <script src="lib/mdl/material.min.js"></script>
+    <script src="lib/moment.min.js"></script>
+    <script src="lib/Chart.bundle.min.js"></script>
+    <script src="lib/jquery/jquery.kinetic.min.js"></script>
+    <script src="lib/jquery/jquery.easing.js"></script>
+    <script src="lib/jquery/jquery.easypiechart.js"></script>
+    <script src="lib/simplewebrtc-with-adapter.bundle.js"></script>
+    <script src="lib/Winwheel.min.js"></script>
+    <script src="lib/TweenMax.min.js"></script>
+    <script src="js/Context.js"></script>
+    <!-- VIEWS -->
+    <script src="js/views/BoardView.js"></script>
+    <script src="js/views/SprintView.js"></script>
+    <script src="js/views/UserStoryView.js"></script>
+    <script src="js/views/TaskView.js"></script>
+    <script src="js/views/MetricsView.js"></script>
+    <script src="js/views/RandomizeFacilitatorView.js"></script>
+    <script src="js/views/WorkView.js"></script>
+    <script src="js/views/MasterView.js"></script>
+    <!-- END VIEWS -->
+    <script src="js/WorkPieChart.js"></script>
+    <!-- INTERACTORS -->
+    <script src="js/interactors/BoardInteractor.js"></script>
+    <script src="js/interactors/SprintInteractor.js"></script>
+    <script src="js/interactors/IssueInteractor.js"></script>
+    <script src="js/interactors/LoginInteractor.js"></script>
+    <script src="js/interactors/VideoChatInteractor.js"></script>
+    <!-- END INTERACTORS -->
+    <script src="js/presenters/BoardPresenter.js"></script>
+    <script src="js/presenters/SprintPresenter.js"></script>
+    <script src="js/presenters/IssuePresenter.js"></script>
+    <script src="js/helpers/Utils.js"></script>
+    <script src="js/helpers/BaseDecisionListener.js"></script>
+    <script src="js/views/LoginView.js"></script>
+    <script src="js/presenters/LoginPresenter.js"></script>
+    <script src="js/videochat/VideoChatView.js"></script>
+    <script src="js/videochat/VideoChatPresenter.js"></script>
+    <title>Stand Up</title>
+  </head>
+  <body>
+    <dialog id="login" class="mdl-dialog">
+      <h4 class="mdl-dialog__title">
+        <i class="fas fa-chalkboard-teacher"></i> Stand Up
+      </h4>
+      <form action="#">
+        <div class="mdl-dialog__content">
+          <div
+            class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+          >
+            <input
+              class="mdl-textfield__input user"
+              type="text"
+              id="userInput"
+            />
+            <label class="mdl-textfield__label" for="userInput"
+              >Username...</label
+            >
+          </div>
+          <div
+            class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+          >
+            <input
+              class="mdl-textfield__input password"
+              type="password"
+              id="passwordInput"
+            />
+            <label class="mdl-textfield__label" for="passwordInput"
+              >Password...</label
+            >
+          </div>
+          <div
+            class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+          >
+            <input
+              class="mdl-textfield__input server"
+              type="text"
+              id="serverInput"
+            />
+            <label class="mdl-textfield__label" for="serverInput"
+              >Server...</label
+            >
+          </div>
+          <label
+            class="mdl-radio mdl-js-radio mdl-js-ripple-effect"
+            for="option-1"
+          >
+            <input
+              type="radio"
+              id="option-1"
+              class="mdl-radio__button"
+              name="options"
+              value="1"
+              checked
+            />
+            <span class="mdl-radio__label blink_label">JIRA</span>
+          </label>
+        </div>
+        <div class="mdl-dialog__actions">
+          <button type="submit" class="mdl-button submit">Login</button>
+        </div>
+        <div
+          class="progress mdl-progress mdl-js-progress mdl-progress__indeterminate"
+        ></div>
+      </form>
+    </dialog>
+    <div id="board">
+      <div id="header">
+        <ul>
+          <li>
+            <img id="logo" src="img/logo.png" />
+            <select id="boardList"></select>
+            <select id="sprintList"></select>
+          </li>
+          <li><div>To do</div></li>
+          <li><div>In Progress</div></li>
+          <!--                    <li><div>To Test</div></li>-->
+          <li><div>Done</div></li>
+        </ul>
+      </div>
+      <div
+        id="loading"
+        class="mdl-progress mdl-js-progress mdl-progress__indeterminate"
+      ></div>
+      <div id="content"></div>
+      <div id="standup">
+        <div id="right_panel">
+          <div id="clockNow" class="digital-clock"></div>
+          <div class="date"></div>
+          <div id="remoteVideo"></div>
+          <div id="input-worklog">
+            <h5>Logged time:</h5>
+            <p></p>
+            <section>
+              <img id="sad-emoji" src="img/sad.png" />
+            </section>
+          </div>
+          <div id="controls_container">
+            <div id="countdown">
+              <div class="counter">
+                <div class="text"></div>
+                <div class="chart" data-percent="100"></div>
               </div>
-              <div class="mdl-dialog__actions">
-                <button type="submit" class="mdl-button submit">Login</button>
-              </div>
-              <div class="progress mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
-            </form>
-        </dialog>
-        <div id="board">
-            <div id="header">
-                <ul>
-                    <li>
-                        <img id="logo" src="img/logo.png"/>
-                        <select id="boardList"></select>
-                        <select id="sprintList"></select>
-                    </li>
-                    <li><div>To do</div></li>
-                    <li><div>In Progress</div></li>
-                    <li><div>To Test</div></li>
-                    <li><div>Done</div></li>
-                </ul>
+              <div class="user"></div>
             </div>
-			<div id="loading" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
-            <div id="content"></div>
-            <div id="standup">
-				<div id="right_panel">
-                    <div id="clockNow" class="digital-clock"></div>
-					<div class="date"></div>
-                    <div id="remoteVideo"></div>
-                    <div id="controls_container">
-                        <div id="countdown">
-                            <div class="counter">
-                                <div class="text"></div>
-                                <div class="chart" data-percent="100"></div>
-                            </div>
-                            <div class="user"></div>
-                        </div>
-                        <ul class="users"></ul>
-                        <div id="controls">
-                            <button id="next_standup" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
-                                <i class="material-icons">skip_next</i>
-                            </button>
-                            <button id="pause_standup" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
-                                <i class="material-icons">pause</i>
-                            </button>
-                            <button id="stop_standup" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
-                                <i class="material-icons">stop</i>
-                            </button>
-                        </div>
-                    </div>
-				</div>
+            <ul class="users"></ul>
+            <div id="controls">
+              <button
+                id="next_standup"
+                class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored"
+              >
+                <i class="material-icons">skip_next</i>
+              </button>
+              <button
+                id="pause_standup"
+                class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored"
+              >
+                <i class="material-icons">pause</i>
+              </button>
+              <button
+                id="stop_standup"
+                class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored"
+              >
+                <i class="material-icons">stop</i>
+              </button>
             </div>
-            <div id="footer">
-                <div id="clockNow2" class="digital-clock"></div>
-                <div class="divider"></div>
-                <div class="log"></div>
-                <button id="start_standup" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
-                    <i class="material-icons">record_voice_over</i>
-                </button>
-                <button id="start_randomize_facilitator" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
-                    <i class="material-icons">shuffle</i>
-                </button>
-            </div>
+          </div>
         </div>
-        
-        <div id="localVideo"></div>
-		<div id="context-menu"></div>
-        <div id="upgrade"><i class="fas fa-flag"></i>Viewer <span></span> has been installed, click <a href="#">Reload</a>. You can <a href="https://github.com/lurume84/standapp-viewer/releases" target="_blank">read more</a> about changes in this release.</div>
-        <div id="draggable-window"></div>
-        <div id="toolbar-window">
-			<div class="advanced">
-                <i class="fas fa-chart-line"></i>
-            </div>
-            <div class="minimize">
-                <i class="fas fa-minus"></i>
-            </div>
-            <div class="maximize">
-                <i class="fas fa-window-maximize"></i>
-            </div>
-            <div class="close">
-                <i class="fas fa-times"></i>
-            </div>
+      </div>
+      <div id="footer">
+        <div id="clockNow2" class="digital-clock"></div>
+        <div class="divider"></div>
+        <div class="log"></div>
+        <button
+          id="start_standup"
+          class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored"
+        >
+          <i class="material-icons">record_voice_over</i>
+        </button>
+        <button
+          id="start_randomize_facilitator"
+          class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored"
+        >
+          <i class="material-icons">shuffle</i>
+        </button>
+      </div>
+    </div>
+
+    <div id="localVideo"></div>
+    <div id="context-menu"></div>
+    <div id="upgrade">
+      <i class="fas fa-flag"></i>Viewer <span></span> has been installed, click
+      <a href="#">Reload</a>. You can
+      <a
+        href="https://github.com/lurume84/standapp-viewer/releases"
+        target="_blank"
+        >read more</a
+      >
+      about changes in this release.
+    </div>
+    <div id="draggable-window"></div>
+    <div id="toolbar-window">
+      <div class="advanced">
+        <i class="fas fa-chart-line"></i>
+      </div>
+      <div class="minimize">
+        <i class="fas fa-minus"></i>
+      </div>
+      <div class="maximize">
+        <i class="fas fa-window-maximize"></i>
+      </div>
+      <div class="close">
+        <i class="fas fa-times"></i>
+      </div>
+    </div>
+    <div id="toast" class="mdl-js-snackbar mdl-snackbar">
+      <i class="fas fa-exclamation-triangle"></i>
+      <div class="mdl-snackbar__text"></div>
+      <button class="mdl-snackbar__action" type="button"></button>
+    </div>
+    <div id="randomize-facilitator">
+      <div>
+        <button
+          id="close-randomize-facilitator-button"
+          class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored"
+        >
+          <i class="material-icons">clear</i>
+        </button>
+      </div>
+      <div id="randomize-facilitator-content">
+        <button
+          id="start-spin-button"
+          class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored"
+        >
+          <i class="material-icons">shuffle</i>
+        </button>
+        <button
+          id="reset-spin-button"
+          class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored"
+        >
+          <i class="material-icons">refresh</i>
+        </button>
+        <div width="700" height="700" class="the_wheel" id="the-wheel">
+          <canvas id="canvas" width="600" height="600">
+            <p>
+              Sorry, your browser doesn't support canvas. Please try another.
+            </p>
+          </canvas>
         </div>
-        <div id="toast" class="mdl-js-snackbar mdl-snackbar">
-            <i class="fas fa-exclamation-triangle"></i>
-            <div class="mdl-snackbar__text"></div>
-            <button class="mdl-snackbar__action" type="button"></button>
+        <div id="winner-container">
+          <div id="winner-image"></div>
+          <div id="winner-text"></div>
         </div>
-        <div id="randomize-facilitator">
-            <div>
-                <button id="close-randomize-facilitator-button" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
-                    <i class="material-icons">clear</i>
-                </button>
-            </div>
-            <div id="randomize-facilitator-content">
-                <button id="start-spin-button" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
-                    <i class="material-icons">shuffle</i>
-                </button>
-                <button id="reset-spin-button" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
-                    <i class="material-icons">refresh</i>
-                </button>
-                <div width="700" height="700" class="the_wheel" id="the-wheel">
-                    <canvas id="canvas" width="600" height="600">
-                        <p>Sorry, your browser doesn't support canvas. Please try another.</p>
-                    </canvas>
-                </div>
-                <div id="winner-container">
-                    <div id="winner-image">
-                    </div>
-                    <div id="winner-text">
-                    </div>
-                </div>
-
-            </div>
-
+      </div>
+    </div>
+    <div id="scrum-helper">
+      <div>
+        <button
+          id="close-scrum-helper-button"
+          class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored"
+        >
+          <i class="material-icons">clear</i>
+        </button>
+      </div>
+      <div id="scrum-helper-content">
+        <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+          <thead>
+            <tr>
+              <th class="mdl-data-table__cell--non-numeric non-export-field">
+                Type
+              </th>
+              <th class="mdl-data-table__cell--non-numeric">ID</th>
+              <th class="mdl-data-table__cell--non-numeric">Description</th>
+              <th class="mdl-data-table__cell--non-numeric">USP</th>
+              <th class="mdl-data-table__cell--non-numeric eos-field">
+                <span>DEV Log.</span>
+              </th>
+              <th class="mdl-data-table__cell--non-numeric eos-field">
+                <span>DEV Est.</span>
+              </th>
+              <th class="mdl-data-table__cell--non-numeric sos-field">
+                <span>DEV Remain.</span>
+              </th>
+              <th class="mdl-data-table__cell--non-numeric eos-field">
+                <span>AT Log.</span>
+              </th>
+              <th class="mdl-data-table__cell--non-numeric eos-field">
+                <span>AT Est.</span>
+              </th>
+              <th class="mdl-data-table__cell--non-numeric sos-field">
+                <span>AT Remain.</span>
+              </th>
+              <th class="mdl-data-table__cell--non-numeric eos-field">
+                <span>TEST Log.</span>
+              </th>
+              <th class="mdl-data-table__cell--non-numeric eos-field">
+                <span>TEST Est.</span>
+              </th>
+              <th class="mdl-data-table__cell--non-numeric sos-field">
+                <span>TEST Remain.</span>
+              </th>
+              <th class="mdl-data-table__cell--non-numeric eos-field">
+                <span>DEV devi..</span>
+              </th>
+              <th class="mdl-data-table__cell--non-numeric eos-field">
+                <span>AT Time devi.</span>
+              </th>
+              <th class="mdl-data-table__cell--non-numeric eos-field">
+                <span>TEST Time devi.</span>
+              </th>
+              <th class="mdl-data-table__cell--non-numeric eos-field">
+                <span>FINDINGS Log.</span>
+              </th>
+              <th class="mdl-data-table__cell--non-numeric non-export-field">
+                <span>Status</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="sos-story-table-body"></tbody>
+          <tfoot id="sos-story-table-foot"></tfoot>
+        </table>
+        <div>
+          <label
+            class="mdl-switch mdl-js-switch mdl-js-ripple-effect"
+            id="switch-sos-label"
+            for="switch-sos"
+          >
+            <input
+              type="checkbox"
+              id="switch-sos"
+              class="mdl-switch__input"
+              checked
+            />
+            <span class="mdl-switch__label">End of sprint</span>
+          </label>
+          <label
+            class="mdl-switch mdl-js-switch mdl-js-ripple-effect"
+            id="switch-export-label"
+            for="switch-export"
+          >
+            <input
+              type="checkbox"
+              id="switch-export"
+              class="mdl-switch__input"
+              checked
+            />
+            <span class="mdl-switch__label">Export</span>
+          </label>
         </div>
-		<div id="scrum-helper">
-            <div>
-                <button id="close-scrum-helper-button" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
-                    <i class="material-icons">clear</i>
-                </button>
-            </div>
-            <div id="scrum-helper-content">
-                <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-                    <thead>
-                    <tr>
-                        <th class="mdl-data-table__cell--non-numeric non-export-field">Type</th>
-                        <th class="mdl-data-table__cell--non-numeric">ID</th>
-                        <th class="mdl-data-table__cell--non-numeric">Description</th>
-                        <th class="mdl-data-table__cell--non-numeric">USP</th>
-                        <th class="mdl-data-table__cell--non-numeric eos-field"><span>DEV Log.</span></th>
-                        <th class="mdl-data-table__cell--non-numeric eos-field"><span>DEV Est.</span></th>
-                        <th class="mdl-data-table__cell--non-numeric sos-field"><span>DEV Remain.</span></th>
-                        <th class="mdl-data-table__cell--non-numeric eos-field"><span>AT Log.</span></th>
-                        <th class="mdl-data-table__cell--non-numeric eos-field"><span>AT Est.</span></th>
-                        <th class="mdl-data-table__cell--non-numeric sos-field"><span>AT Remain.</span></th>
-                        <th class="mdl-data-table__cell--non-numeric eos-field"><span>TEST Log.</span></th>
-                        <th class="mdl-data-table__cell--non-numeric eos-field"><span>TEST Est.</span></th>
-                        <th class="mdl-data-table__cell--non-numeric sos-field"><span>TEST Remain.</span></th>
-                        <th class="mdl-data-table__cell--non-numeric eos-field"><span>DEV devi..</span></th>
-                        <th class="mdl-data-table__cell--non-numeric eos-field"><span>AT Time devi.</span></th>
-                        <th class="mdl-data-table__cell--non-numeric eos-field"><span>TEST Time devi.</span></th>
-                        <th class="mdl-data-table__cell--non-numeric eos-field"><span>FINDINGS Log.</span></th>
-                        <th class="mdl-data-table__cell--non-numeric non-export-field"><span>Status</span></th>
-                    </tr>
-                    </thead>
-                    <tbody id= "sos-story-table-body">
-                    </tbody>
-                    <tfoot id= "sos-story-table-foot">
-                    </tfoot>
-                </table>
-                <div>
-                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect"  id="switch-sos-label" for="switch-sos">
-                        <input type="checkbox" id="switch-sos" class="mdl-switch__input" checked>
-                        <span class="mdl-switch__label">End of sprint</span>
-                    </label>
-                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect"  id="switch-export-label" for="switch-export">
-                        <input type="checkbox" id="switch-export" class="mdl-switch__input" checked>
-                        <span class="mdl-switch__label">Export</span>
-                    </label>
-                </div>
-            </div>
-        </div>
-    </body>
-    <script>
-		var credentials = {server: "", user: "", password: ""};
-    
-		var g_dev_users = [];
-		var g_qa_users = [];
-        IL: var g_issuetype_map = {user_story: {"1": "Bug", "10200" : "Spike", "3" : "Task", "10001" : "Story", "10403" : "Integration", "10601" : "Systems Doc", "10600" : "Systems Test", "10401" : "Doc", "10100" : "Hardware Failure" }, task: {"5": "Sub-task" , "10800" : "Review", "10500" : "Finding"}};
+      </div>
+    </div>
+  </body>
+  <script>
+    var credentials = { server: "", user: "", password: "" };
 
-        // SNOW
-        // var g_issuetype_map =  {user_story: {"9": "us", "10302" : "offsprint_us"}, task: {"12": "qa", "5": "dev", "10402": "at", "10303": "offsprint_task"}};
-        var g_evaluatedUser = "none";
+    var g_dev_users = [];
+    var g_qa_users = [];
+    IL: var g_issuetype_map = {
+      user_story: {
+        1: "Bug",
+        10200: "Spike",
+        3: "Task",
+        10001: "Story",
+        10403: "Integration",
+        10601: "Systems Doc",
+        10600: "Systems Test",
+        10401: "Doc",
+        10100: "Hardware Failure",
+      },
+      task: { 5: "Sub-task", 10800: "Review", 10500: "Finding" },
+    };
 
-        var g_status_map = {"1": "todo", "3": "progress", "10001": "done", "10704" : "done", "10600" : "progress", "10601" : "progress", "10602" : "progress", "10401" : "progress", "10000" : "todo", "10500" : "test", "10300" : "progress", "10400" : "progress", "10603" : "progress"};
-        var g_estimate_field = "customfield_10003";
-		        
-		var g_seconds_per_user = 60;
-		
-		var g_master = {"key": "username_master",
-						"avatarUrls": {
-							"48x48": "img/master.png"
-						},
-						"displayName": "Master"
-					};
+    // SNOW
+    // var g_issuetype_map =  {user_story: {"9": "us", "10302" : "offsprint_us"}, task: {"12": "qa", "5": "dev", "10402": "at", "10303": "offsprint_task"}};
+    var g_evaluatedUser = "none";
 
-        var initializeConfig = initializeConfig || [];
-        initializeConfig.push("login");
-        initializeConfig.push("board");
-        initializeConfig.push("sprint");
-        initializeConfig.push("issue");
+    var g_status_map = {
+      1: "todo",
+      3: "progress",
+      10001: "done",
+      10704: "done",
+      10600: "progress",
+      10601: "progress",
+      10602: "progress",
+      10401: "progress",
+      10000: "todo",
+      10500: "test",
+      10300: "progress",
+      10400: "progress",
+      10603: "progress",
+    };
+    var g_estimate_field = "customfield_10003";
 
-        (function()
-        {
-           new viewer.helpers.Initializer();
-        })();
-    </script>
+    var g_seconds_per_user = 60;
+
+    var g_master = {
+      key: "username_master",
+      avatarUrls: {
+        "48x48": "img/master.png",
+      },
+      displayName: "Master",
+    };
+
+    var initializeConfig = initializeConfig || [];
+    initializeConfig.push("login");
+    initializeConfig.push("board");
+    initializeConfig.push("sprint");
+    initializeConfig.push("issue");
+
+    (function () {
+      new viewer.helpers.Initializer();
+    })();
+
+    $(document).on("click", ".expand-link", (evt) => {
+      let issueID = $(evt.target).data("issue-id");
+      const $parent = $(`#${issueID}`);
+      if ($parent.hasClass("expanded")) {
+        $(evt.target).html("Expand");
+        $parent.removeClass("expanded");
+      } else {
+        $(evt.target).html("Collapse");
+        $parent.addClass("expanded");
+      }
+    });
+  </script>
 </html>
