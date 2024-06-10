@@ -27,15 +27,15 @@
 
 #right_panel ul.users > li > div.worklog > div.tasks > ul > li {
   width: 100%;
-  height: 200px;
+  height: 210px;
   margin-top: 10px;
 }
 
 #right_panel ul.users > li > div.worklog > div.tasks > ul > li > div {
   float: left;
   width: 30%;
-  height: 200px;
-  min-height: 200px;
+  height: 210px;
+  min-height: 210px;
   padding: 5px;
   margin-left: 10px;
   margin-right: 2%;
@@ -110,10 +110,8 @@
   > li
   > div:nth-child(1),
 #right_panel ul.users > li > div.worklog > div.tasks > ul > li > div.info {
-  height: auto;
+  height: 210px;
   padding: 0;
-  min-height: 50px;
-  max-height: 200px;
 }
 
 #right_panel ul.users > li > div.worklog > div.tasks > ul > li > div.info {
@@ -126,6 +124,10 @@
   width: 20%;
 }
 
+#right_panel ul.users > li > div.worklog > div.tasks > ul > li > div.work canvas {
+  margin: 0 auto;
+}
+
 #right_panel
   ul.users
   > li
@@ -135,7 +137,7 @@
   > li
   > div.info
   > div {
-  height: 31%;
+  height: 70px;
 }
 
 #right_panel
@@ -151,6 +153,7 @@
   width: 98%;
   height: 90%;
   float: left;
+  background-color: #3d487d;
 }
 
 #right_panel
@@ -163,7 +166,7 @@
   > div.info
   > div
   > li.not_assigned_to_me {
-  opacity: 0.5;
+  background-color: rgba(42, 42, 42, 0.6);
 }
 
 #right_panel
@@ -178,15 +181,17 @@
   > li
   .title {
   margin-top: 0px;
-  width: 50%;
+  width: 55%;
   font-size: 13px;
   height: 32px;
   max-height: 32px;
   min-height: 16px;
-  line-height: 16px;
+  line-height: 32px;
   -webkit-line-clamp: 2;
   opacity: 0.8;
 }
+
+#right_panel ul.users > li > div.worklog > div.tasks > ul > li > div.info > div > li .labels-section { display: inline }
 
 #right_panel
   ul.users
@@ -297,17 +302,24 @@
 }
 
 #right_panel
-  ul.users
-  > li
-  > div.worklog
-  > div.tasks
-  > ul
-  > li
-  > div
-  > li.todo
-  > li.task {
-  height: 25%;
+ul.users
+> li
+> div.worklog
+> div.tasks
+> ul
+> li
+> div
+> li.todo
+> li.task {
+  border-bottom: 1px solid;
+  padding-bottom: 26px;
+  height: 52px;;
 }
+
+#right_panel ul.users > li > div.worklog > div.tasks > ul > li > div > li.todo > li.task .progress,
+#right_panel ul.users > li > div.worklog > div.tasks > ul > li > div > li.todo > li.task .assignee { display: none; }
+#right_panel ul.users > li > div.worklog > div.tasks > ul > li > div > li.todo > li.task .labels-section {display: inline;}
+#right_panel ul.users > li > div.worklog > div.tasks > ul > li > div > li.todo > li.task .title { margin-top: 6px; margin-right: 0;}
 
 #input-worklog {
   display: flex;

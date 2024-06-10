@@ -1,6 +1,6 @@
 (function (interactors) {
   function SprintInteractor() {}
-
+// https://jira.ilww.com:8443/jira/rest/api/latest/issue/BEASW-XXXXX/worklog to obtain all worklog of an issue
   Object.defineProperties(SprintInteractor.prototype, {
     getList: {
       value: function (startAt, boardId, listener) {

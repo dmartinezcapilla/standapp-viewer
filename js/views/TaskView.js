@@ -38,10 +38,7 @@
                   </div>`;
               }
 
-              // id: 1, name: 'Urgent'
-              // id: 2, name: 'High'
-              // id: 3, name: 'Medium'
-              // id: 4, name: 'Low'
+              let taskDetails = decomposeTitleTask(issue.fields.summary);
 
               var task = $("<li/>", {
                 id: issue.key,
@@ -49,11 +46,12 @@
                 html: `${assignee}
                   <img class="priority-icon" src="${issue.fields.priority.iconUrl}" \>
                   <a class='number'> ${issue.key} </a>
+                  <div class="labels-section">${taskDetails.statusLabel}${taskDetails.ownerLabel}</div>
                   <div class="mdl-tooltip" data-mdl-for="${issue.key}_link">
                     ${issue.fields.summary}
                   </div>
                   <div id="${issue.key}_link" class="title">
-                    ${issue.fields.summary}
+                    ${taskDetails.title}
                   </div>`,
               });
 

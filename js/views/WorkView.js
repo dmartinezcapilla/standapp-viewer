@@ -1,10 +1,8 @@
 (function (views) {
-  var self;
+  let self;
 
   function WorkView(presenter) {
     this.presenter = presenter;
-    this.audio = new Audio("audio/timeout_full.mp3");
-    this.audio.loop = true;
   }
 
   Object.defineProperties(WorkView.prototype, {
@@ -13,65 +11,79 @@
         var self = this;
 
         $("#start_standup")
-          .off("click")
-          .on("click", function () {
-            $("#standup").addClass("running");
-            $("#stop_standup").show();
-            $("#next_standup").show();
-            $("#countdown").show();
-            $("#right_panel").show();
-            $(".clock-container").show();
-            $("#right_panel ul.users > li:first-child").css({
-              marginLeft: "131px",
-            });
-            $("#localVideo").show();
-            $(this).hide();
+            .off("click")
+            .on("click", function () {
+              $("#standup").addClass("running");
+              $("#stop_standup").show();
+              $("#next_standup").show();
+              $("#pause_standup").show();
+              $("#previous_standup").hide();
+              $("#countdown").show();
+              $("#right_panel").show();
+              $(".clock-container").show();
+              $("#right_panel ul.users > li:first-child").css({
+                marginLeft: "131px",
+              });
+              $("#localVideo").show();
+              $(this).hide();
 
-            self.nextUser();
-          });
+              self.nextUser();
+            });
+
+        $("#previous_standup")
+            .off("click")
+            .on("click", function () {
+              self.previousUser();
+            });
 
         $("#next_standup")
-          .off("click")
-          .on("click", function () {
-            $("#countdown .chart").data("easyPieChart").options.onContinue =
-              function () {
-                return false;
-              };
-            $("#countdown .chart").data("easyPieChart").options.onStop();
-          });
+            .off("click")
+            .on("click", function () {
+              self.nextUser();
+            });
 
         $("#pause_standup")
-          .off("click")
-          .on("click", function () {
-            if ($("#standup").hasClass("paused")) {
-              $("#standup").removeClass("paused");
-              $(this).children().html("pause");
+            .off("click")
+            .on("click", function () {
+              if ($("#standup").hasClass("paused")) {
+                chart_is_running = true;
+                $("#standup").removeClass("paused");
+                $(this).children().html("pause");
+                showActionButtons();
+              } else {
+                chart_is_running = false;
+                $("#standup").addClass("paused");
+                $(this).children().html("play_arrow");
 
-              $("#countdown .chart").data(
-                "easyPieChart",
-              ).options.animate.duration = self.currentCounterValues.duration;
-              $("#countdown .chart")
-                .data("easyPieChart")
-                .update(0, self.currentCounterValues.from);
-              $("#next_standup").show();
-            } else {
-              $("#standup").addClass("paused");
-              $(this).children().html("play_arrow");
-              $("#next_standup").hide();
-            }
-          });
+                hideActionButtons(false);
+              }
+            });
 
         $("#stop_standup")
-          .off("click")
-          .on("click", function () {
-            self.stop();
-          });
+            .off("click")
+            .on("click", function () {
+              self.stop();
+            });
 
         showDigitalClock();
 
         $("#right_panel > .date").html(moment().format("dddd, D MMMM"));
 
         $("#right_panel ul.users").kinetic({ cursor: "auto" });
+
+        chart_element = new Chart(
+            document.getElementById('time_chart'),
+            config_chart_js
+        );
+
+        setInterval(() => {
+          updateTimeChart();
+          if (chart_is_running && elapsed_seconds === max_seconds_in_chart) {
+            chart_is_running = false;
+            setTimeChart(0);
+            self.nextUser();
+          }
+        }, 100); // Increment elapsed time every second
       },
       enumerable: false,
     },
@@ -83,13 +95,11 @@
           $("#pause_standup").children().html("pause");
         }
 
-        this.audio.pause();
-        this.audio.currentTime = 0;
-
         $("#standup").removeClass("running");
         $("#pause_standup").hide();
         $("#countdown").hide();
         $("#stop_standup").hide();
+        $("#previous_standup").hide();
         $("#next_standup").hide();
         $("#right_panel").hide();
         $(".clock-container").hide();
@@ -99,62 +109,103 @@
 
         $("#right_panel ul.users").children().removeClass("completed");
 
-        $("#countdown .chart").removeData("easyPieChart").html("");
         $("#countdown .text").html("");
 
         $(".worklog").hide();
       },
       enumerable: false,
     },
+    previousUser: {
+      value: function () {
+        var self = this;
+        var length = $("#right_panel ul.users").children(".completed").length;
+        let prev = undefined;
+        let current = prev = $("#right_panel ul.users")
+            .children(".completed").eq(length - 1);
+        if(length > 1) {
+          prev = $("#right_panel ul.users")
+              .children(".completed").eq(length - 2);
+        }
 
+        if (prev!==undefined) {
+
+          $(".worklog").hide();
+
+          $("#right_panel ul.users")
+              .children(".completed")
+              .children("img")
+              .css({ width: "32px", height: "32px", "border-radius": "16px" });
+
+          $("#right_panel ul.users li:first-child").animate(
+              { marginLeft: "+=62px" },
+              600,
+              "swing",
+              function () {
+                current.removeClass("completed");
+              },
+          );
+
+          prev
+              .children("img")
+              .animate(
+                  { width: "48px", height: "48px", "border-radius": "24px" },
+                  600,
+              );
+
+          showUserName(prev.attr("data-name"));
+
+          hideActionButtons(true);
+
+          prev.children(".worklog").show();
+
+          if (prev.children(".worklog").data("pie")) {
+            prev.children(".worklog").data("pie").show();
+          }
+
+          //Start chart
+          startWorkingTime();
+
+        } else {
+          self.stop();
+        }
+      },
+      enumerable: false,
+    },
     nextUser: {
       value: function () {
         var self = this;
 
         var next = $("#right_panel ul.users")
-          .children(":not(.completed)")
-          .first();
+            .children(":not(.completed)")
+            .first();
 
         if (next.length) {
-          this.audio.pause();
-          this.audio.currentTime = 0;
-
           $(".worklog").hide();
 
-          $("#countdown .chart").removeData("easyPieChart").html("");
-
           $("#right_panel ul.users")
-            .children(".completed")
-            .children("img")
-            .css({ width: "32px", height: "32px", "border-radius": "16px" });
+              .children(".completed")
+              .children("img")
+              .css({ width: "32px", height: "32px", "border-radius": "16px" });
 
           $("#right_panel ul.users li:first-child").animate(
-            { marginLeft: "-=62px" },
-            600,
-            "swing",
-            function () {
-              next.addClass("completed");
-            },
+              { marginLeft: "-=62px" },
+              600,
+              "swing",
+              function () {
+                next.addClass("completed");
+              },
           );
 
           next
-            .children("img")
-            .animate(
-              { width: "48px", height: "48px", "border-radius": "24px" },
-              600,
-            );
+              .children("img")
+              .animate(
+                  { width: "48px", height: "48px", "border-radius": "24px" },
+                  600,
+              );
 
-          var userId = next.attr("data-user");
+          showUserName(next.attr("data-name"));
 
-          var userName = next.attr("data-name");
-          if (userName.indexOf(" ") > -1) {
-            userName = userName.substring(0, userName.indexOf(" "));
-          }
-
-          $("#countdown .user").html(userName);
-
-          $("#next_standup").hide();
-          $("#pause_standup").hide();
+          hideActionButtons(true);
 
           next.children(".worklog").show();
 
@@ -162,56 +213,9 @@
             next.children(".worklog").data("pie").show();
           }
 
-          self.onLastFiveSeconds = function () {
-            $("#pause_standup").show();
-            self.audio.play();
-            self.onLastFiveSeconds = undefined;
-          };
+          //Start chart
+          startWorkingTime();
 
-          $("#countdown .chart").easyPieChart({
-            scaleColor: false,
-            trackColor: "rgba(255,255,255,0.3)",
-            barColor: "#C5CBE9",
-            lineWidth: 6,
-            lineCap: "butt",
-            size: 95,
-            onContinue: function () {
-              return (
-                $("#standup").hasClass("running") &&
-                !$("#standup").hasClass("paused")
-              );
-            },
-            onStop: function () {
-              this.options.onStop = function () {
-                $("#countdown .text").html("");
-                self.nextUser();
-              };
-
-              this.options.onStep = function (from, to, currentValue) {
-                var duration = (currentValue / 100) * g_seconds_per_user;
-
-                if (duration < 5) {
-                  if (self.onLastFiveSeconds != undefined) {
-                    self.onLastFiveSeconds();
-                  }
-                }
-
-                $("#countdown .text").html(Math.round(duration));
-                self.currentCounterValues = {
-                  from: currentValue,
-                  duration: duration * 1000,
-                };
-              };
-
-              this.options.easing = function (x, t, b, c, d) {
-                return (c * t) / d + b;
-              };
-              this.options.animate.duration = g_seconds_per_user * 1000;
-              this.update(0);
-
-              $("#next_standup").show();
-            },
-          });
         } else {
           self.stop();
         }
@@ -264,14 +268,14 @@
             if (!issue.fields.worklog.worklogs.length) {
               if (status !== "rejected") {
                 user
-                  .children(".worklog")
-                  .data("pie")
-                  .addWorkLog(issue, new Date(), 0);
+                    .children(".worklog")
+                    .data("pie")
+                    .addWorkLog(issue, new Date(), 0);
               } else {
                 user
-                  .children(".worklog")
-                  .data("pie")
-                  .addWorkLog(issue, issue.fields.updated, 0);
+                    .children(".worklog")
+                    .data("pie")
+                    .addWorkLog(issue, issue.fields.updated, 0);
               }
             }
           }
@@ -279,9 +283,9 @@
           $.each(issue.fields.worklog.worklogs, function (key2, worklog) {
             var user = self.createUser(worklog.author);
             user
-              .children(".worklog")
-              .data("pie")
-              .addWorkLog(issue, worklog.created, worklog.timeSpentSeconds);
+                .children(".worklog")
+                .data("pie")
+                .addWorkLog(issue, worklog.created, worklog.timeSpentSeconds);
           });
         });
       },

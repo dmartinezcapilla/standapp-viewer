@@ -25,16 +25,6 @@
           const optionElement = `<option value="${value.id}">${value.name}</option>`;
           $("#boardList").append(optionElement);
         });
-        //
-        // if (defaultBoard) {
-        //   $(`#boardList option[value="${defaultBoard.boardId}"]`).attr(
-        //     "selected",
-        //     "selected",
-        //   );
-        // }
-        // if (data.isLast) {
-        //   $("#boardList").change();
-        // }
       },
       enumerable: false,
     },

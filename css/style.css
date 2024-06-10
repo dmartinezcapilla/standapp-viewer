@@ -61,7 +61,7 @@ html {
 
 #content > ul {
   width: 100%;
-  height: 100px;
+  height: 140px;
   padding: 0;
   margin: 0;
 }
@@ -81,7 +81,7 @@ html {
 #content > ul > li {
   float: left;
   list-style-type: none;
-  height: 100px;
+  height: 140px;
   overflow-y: auto;
 }
 

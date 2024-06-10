@@ -49,6 +49,7 @@
             self.worklog = self.worklog + d;
           });
         });
+
         $("#input-worklog > p").html(`${self.worklog} h`);
         if (self.worklog < 7.5) {
           $("#sad-emoji").css("display", "block");
@@ -58,119 +59,13 @@
         parent.children("canvas").remove();
         var canvas = $("<canvas/>").appendTo(parent);
 
-        var heightCorrection = 11;
-
-        return new Chart(canvas[0].getContext("2d"), {
-          type: "pie",
+        // Configuration options
+        const config= {
+          type: 'pie',
           data: data,
-          options: {
-            title: {
-              display: false,
-              fontSize: 16,
-              fontStyle: "normal",
-              fontFamily: "Helvetica",
-              text: title,
-            },
-            legend: {
-              display: false,
-            },
-            tooltips: {
-              mode: "index",
-              intersect: true,
-            },
-            responsive: true,
-            responsiveAnimationDuration: 1000,
-            maintainAspectRatio: false,
-            scales: {
-              xAxes: [
-                {
-                  display: false,
-                  ticks: { display: false },
-                  gridLines: { display: false },
-                },
-              ],
-              yAxes: [
-                {
-                  display: false,
-                  ticks: { display: false },
-                  gridLines: { display: false },
-                },
-              ],
-            },
-            hover: {
-              animationDuration: 0,
-            },
-            animation: {
-              duration: 1000,
-              onComplete: function () {
-                var chartInstance = this.chart;
-                var ctx = chartInstance.ctx;
-
-                var self = this;
-                ctx.font = Chart.helpers.fontString(
-                  Chart.defaults.global.defaultFontSize,
-                  Chart.defaults.global.defaultFontStyle,
-                  Chart.defaults.global.defaultFontFamily,
-                );
-                ctx.textAlign = "center";
-                ctx.fillStyle = "#fff";
-
-                Chart.helpers.each(
-                  self.data.datasets.forEach((dataset, datasetIndex) => {
-                    let meta = self.getDatasetMeta(datasetIndex);
-                    let total = 0; //total values to compute fraction
-                    let labelxy = [];
-                    let offset = Math.PI / 2; //start sector from top
-                    let radius, centerx, centery;
-                    let lastend = 0; //prev arc's end line: starting with 0
-
-                    for (let val of dataset.data) {
-                      total += val;
-                    }
-
-                    Chart.helpers.each(
-                      meta.data.forEach(function (element, index) {
-                        radius =
-                          0.9 * element._model.outerRadius -
-                          element._model.innerRadius;
-                        centerx = element._model.x;
-                        centery = element._model.y + heightCorrection;
-
-                        let thispart = dataset.data[index];
-                        let arcsector = Math.PI * ((2 * thispart) / total);
-
-                        if (element.hasValue() && dataset.data[index] > 0) {
-                          labelxy.push(
-                            lastend + arcsector / 2 + Math.PI + offset,
-                          );
-                        } else {
-                          labelxy.push(-1);
-                        }
-
-                        lastend += arcsector;
-                      }),
-                      self,
-                    );
-
-                    let lradius = (radius * 3) / 4;
-                    for (var idx in labelxy) {
-                      if (labelxy[idx] === -1) continue;
-
-                      let langle = labelxy[idx];
-                      let dx = centerx + lradius * Math.cos(langle);
-                      let dy = centery + lradius * Math.sin(langle);
-
-                      ctx.fillText(round(dataset.data[idx], 2) + "h", dx, dy);
-                    }
-
-                    heightCorrection = 0;
-                  }),
-                  self,
-                );
-              },
-            },
-          },
-        });
+          options: options_story_work_chart,
+        };
+        return new Chart(canvas, config);
       },
       enumerable: false,
     },
@@ -184,72 +79,49 @@
           data.datasets[1].data[0] + data.datasets[2].data[0],
         );
 
-        return new Chart(canvas[0].getContext("2d"), {
-          type: "horizontalBar",
+        // console.log("data chart bar");
+        // console.log(data);
+
+        const config= {
+          type: 'bar',
           data: data,
           options: {
-            legend: {
-              display: false,
-            },
-            tooltips: {
-              mode: "index",
-              intersect: true,
-            },
+            indexAxis: 'y',
             responsive: true,
-            responsiveAnimationDuration: 1000,
             maintainAspectRatio: false,
-            scales: {
-              xAxes: [
-                {
-                  display: false,
-                  stacked: true,
-                  ticks: { display: false, max: maxScaleX },
-                  gridLines: { display: false },
+            plugins: {
+              datalabels: {
+                display: function(context) {
+                  return context.dataset.data[context.dataIndex] > 0;
                 },
-              ],
-              yAxes: [
-                {
-                  display: false,
-                  stacked: true,
-                  gridLines: { display: false },
+                formatter: function(value, context) {
+                  return value + 'h';
                 },
-              ],
-            },
-            hover: {
-              animationDuration: 0,
-            },
-            animation: {
-              duration: 1000,
-              onComplete: function () {
-                var chartInstance = this.chart;
-                var ctx = chartInstance.ctx;
-
-                ctx.font = Chart.helpers.fontString(
-                  Chart.defaults.global.defaultFontSize,
-                  Chart.defaults.global.defaultFontStyle,
-                  Chart.defaults.global.defaultFontFamily,
-                );
-                ctx.textAlign = "center";
-                ctx.fillStyle = "#fff";
-                ctx.textBaseline = "top";
-
-                this.data.datasets.forEach(function (dataset, i) {
-                  var meta = chartInstance.controller.getDatasetMeta(i);
-
-                  meta.data.forEach(function (bar, index) {
-                    var data = dataset.data[index];
-                    var x =
-                      bar._model.base + (bar._model.x - bar._model.base) * 0.5;
-
-                    if (data > 0) {
-                      ctx.fillText(data + "h", x, bar._model.y - 7);
-                    }
-                  });
-                });
+                color: 'white',
+                anchor: 'center',
+                align: 'center',
+              },
+              legend: {
+                display: false
+              },
+              tooltip: {
+                enabled: false // Disable tooltips
+              },
+              hover: {
+                mode: null // Disable hover effects
               },
             },
+            scales: {
+              x: {
+                display: false
+              },
+              y: {
+                display: false
+              }
+            },
           },
-        });
+        };
+        return new Chart(canvas, config);
       },
       enumerable: false,
     },

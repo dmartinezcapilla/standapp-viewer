@@ -184,3 +184,111 @@ function base64Encode(str)
     }
     return out;
 }
+
+// Initialize chart data labels
+Chart.register(ChartDataLabels);
+
+// Work View methods
+// Function to update the elapsed time on the chart
+function updateTimeChart() {
+    if (chart_is_running && elapsed_seconds < max_seconds_in_chart) {
+        elapsed_seconds++;
+        setTimeChart(elapsed_seconds);
+    }
+}
+
+function setTimeChart(seconds) {
+    chart_element.data.datasets[0].data[0] = max_seconds_in_chart - seconds;
+    chart_element.data.datasets[0].data[1] = seconds;
+    chart_element.update();
+    let time_to_present = Math.floor((max_seconds_in_chart - seconds) / 10);
+    $("#countdown .text").html(time_to_present);
+}
+
+function showUserName(userName) {
+    if (userName.indexOf(" ") > -1) {
+        userName = userName.substring(0, userName.indexOf(" "));
+    }
+
+    $("#countdown .user").html(userName);
+}
+
+function hideActionButtons(hidePauseAction) {
+    $("#previous_standup").hide();
+    $("#next_standup").hide();
+    if (hidePauseAction) {
+        $("#pause_standup").hide();
+    }
+}
+
+function showActionButtons() {
+    if ($("#right_panel ul.users")
+        .children(".completed")
+        .length > 1) {
+        $("#previous_standup").show();
+    }
+    $("#next_standup").show();
+    $("#pause_standup").show();
+}
+
+function startWorkingTime() {
+    elapsed_seconds = 0;
+    chart_is_running = true;
+    setTimeout(() => {
+        showActionButtons();
+    }, 700);
+}
+
+
+// Task View - Decompose title task
+function decomposeTitleTask(title) {
+    var status = undefined;
+    var owner = undefined;
+    var titleParts = title.match(/^\(([A-Z \d\W]+)\)(.*)/);
+    if (titleParts!==null) {
+        status = titleParts[1].trim();
+        title = titleParts[2].trim();
+    }
+    titleParts = title.match(/([A-Z \d\W]+):(.*)/);
+    if (titleParts!==null) {
+        owner = titleParts[1].trim();
+        title = titleParts[2].trim();
+    } else {
+        titleParts = title.match(/(.*):(.*)/);
+        if (titleParts!==null) {
+            owner = titleParts[1].trim();
+            title = titleParts[2].trim();
+        }
+    }
+    var ownerLabel = '';
+    if (owner !== undefined) {
+        var ownerColor = '';
+        if(owner.substring(0,3).toLowerCase()==='dev') {
+            ownerColor = ' dev';
+        }
+        if(owner.substring(0,4).toLowerCase()==='test') {
+            ownerColor = ' test';
+        }
+        if(owner.substring(0,2).toLowerCase()==='at') {
+            ownerColor = ' at';
+        }
+        if(owner.substring(0,7).toLowerCase()==='finding') {
+            ownerColor = ' finding';
+        }
+        ownerLabel = `<span class="owner${ownerColor}">${owner}</span>`;
+    }
+    var statusLabel = '';
+    if (status !== undefined) {
+        var greenStatus = '';
+        if (status==='CLOSED' || status === 'REVIEWED') {
+            greenStatus = ' gr-task';
+        }
+        statusLabel = `<span class="status-task${greenStatus}">${status}</span>`;
+    }
+
+    return {
+        title : title,
+        ownerLabel : ownerLabel,
+        statusLabel : statusLabel
+    };
+}

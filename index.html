@@ -21,7 +21,8 @@
     <script src="lib/Chart.bundle.min.js"></script>
     <script src="lib/jquery/jquery.kinetic.min.js"></script>
     <script src="lib/jquery/jquery.easing.js"></script>
-    <script src="lib/jquery/jquery.easypiechart.js"></script>
+    <script src="lib/chart.js"></script>
+    <script src="lib/chartjs-plugin-datalabels.js"></script>
     <script src="lib/simplewebrtc-with-adapter.bundle.js"></script>
     <script src="lib/Winwheel.min.js"></script>
     <script src="lib/TweenMax.min.js"></script>
@@ -47,6 +48,7 @@
     <script src="js/presenters/BoardPresenter.js"></script>
     <script src="js/presenters/SprintPresenter.js"></script>
     <script src="js/presenters/IssuePresenter.js"></script>
+    <script src="js/helpers/Constants.js"></script>
     <script src="js/helpers/Utils.js"></script>
     <script src="js/helpers/BaseDecisionListener.js"></script>
     <script src="js/views/LoginView.js"></script>
@@ -156,15 +158,23 @@
             <div id="countdown">
               <div class="counter">
                 <div class="text"></div>
-                <div class="chart" data-percent="100"></div>
+                <div class="chart" data-percent="100">
+                  <canvas id="time_chart" width="95" height="100" style='width:95px;height:100px'>></canvas>
+                </div>
               </div>
               <div class="user"></div>
             </div>
             <ul class="users"></ul>
             <div id="controls">
               <button
-                id="next_standup"
-                class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored"
+                      id="previous_standup"
+                      class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored"
+              >
+                <i class="material-icons">skip_previous</i>
+              </button>
+              <button
+                      id="next_standup"
+                      class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored"
               >
                 <i class="material-icons">skip_next</i>
               </button>
@@ -368,62 +378,6 @@
     </div>
   </body>
   <script>
-    var credentials = { server: "", user: "", password: "" };
-
-    var g_dev_users = [];
-    var g_qa_users = [];
-    IL: var g_issuetype_map = {
-      user_story: {
-        1: "Bug",
-        10200: "Spike",
-        3: "Task",
-        10001: "Story",
-        10403: "Integration",
-        10601: "Systems Doc",
-        10600: "Systems Test",
-        10401: "Doc",
-        10100: "Hardware Failure",
-      },
-      task: { 5: "Sub-task", 10800: "Review", 10500: "Finding" },
-    };
-
-    // SNOW
-    // var g_issuetype_map =  {user_story: {"9": "us", "10302" : "offsprint_us"}, task: {"12": "qa", "5": "dev", "10402": "at", "10303": "offsprint_task"}};
-    var g_evaluatedUser = "none";
-
-    var g_status_map = {
-      1: "todo",
-      3: "progress",
-      10001: "done",
-      10704: "done",
-      10600: "progress",
-      10601: "progress",
-      10602: "progress",
-      10401: "progress",
-      10000: "todo",
-      10500: "test",
-      10300: "progress",
-      10400: "progress",
-      10603: "progress",
-    };
-    var g_estimate_field = "customfield_10003";
-
-    var g_seconds_per_user = 60;
-
-    var g_master = {
-      key: "username_master",
-      avatarUrls: {
-        "48x48": "img/master.png",
-      },
-      displayName: "Master",
-    };
-
-    var initializeConfig = initializeConfig || [];
-    initializeConfig.push("login");
-    initializeConfig.push("board");
-    initializeConfig.push("sprint");
-    initializeConfig.push("issue");
-
     (function () {
       new viewer.helpers.Initializer();
     })();

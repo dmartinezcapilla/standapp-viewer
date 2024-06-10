@@ -106,9 +106,13 @@
 
 #controls > button
 {
-    width:48px;
-    height:48px;
-    margin-left:10px;
+    width: 35px;
+    height: 38px;
+    margin-left: 7px;
+}
+
+#controls > button:hover {
+    opacity: 0.8;
 }
 
 #controls > button:first-child
@@ -140,7 +144,7 @@
     z-index:999;
 }
 
-#pause_standup, #stop_standup, #next_standup
+#pause_standup, #stop_standup, #next_standup, #previous_standup
 {
     display:none;
     z-index:999;
